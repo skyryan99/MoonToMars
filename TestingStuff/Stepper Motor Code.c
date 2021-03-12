@@ -25,78 +25,66 @@ void setup()
     *p3dir |= 0b00000001;
     *p5dir |= 0b00000001;
     *p5out &= 0b00000000; //set pin output to low
-
-//    P2DIR = 0b00001000; //Set step pin (pulse pin) as output
-//    P3DIR = 0b00000001; //Set Direction pin as output
-//    P5DIR = 0b00000001; //Set enable pin as output
-//    P5OUT = 0b00000000; //Set enable output to low for now
-
 }
 void main(void)
 {
     uint8_t * p2dir = (uint8_t*) pin2dir;
     uint8_t * p3dir = (uint8_t*) pin3dir;
-    uint8_t * p5out = (uint8_t*) pin5out;
+    uint8_t * p5out = (uint8_t*) pin5out; //connect enable+ to 5.0 pin
     uint8_t * p5dir = (uint8_t*) pin5dir;
     *p2dir |= 0b00001100; //set direction of the pin
     *p3dir |= 0b00000001;
     *p5dir |= 0b00000001;
     *p5out &= 0b00000000; //set pin output to low
-    uint8_t * p2out = (uint8_t*) pin2out;
-    uint8_t * p3out = (uint8_t*) pin3out;
-    uint8_t * p3in = (uint8_t*) pin3in;
+    uint8_t * p2out = (uint8_t*) pin2out; //connect pul+ to 2.3 pin
+    uint8_t * p3out = (uint8_t*) pin3out; //connect dir+ to 3.0 pin
+    uint8_t * p3in = (uint8_t*) pin3in; //connect pul-, dir-, and enable- to the same common ground pin (board ground)
     while(1)
     {
-        if (*p3in & 0b01000000)
-        {
-            *p3out |= 0b00000001; //Set direction of 3.0 to high
-
-                for (x = 0; x < 200; x++)
-                {
-                    *p2out |= 0b00001100; //step pin high
-                    int dog;
-                    for (dog=0; dog<1; dog++)
-                    {
-                        __delay_cycles(1500);
-                    }
-                    P2OUT ^= 0b00001100; //step pin high
-                    int cat;
-                    for (cat=0; cat<1; cat++)
-                    {
-                        __delay_cycles(1500);
-                    }
-
-                }
-        }
-        else
-        {
-            *p2out &= 0x00;
-        }
-
-//            int d;
-//            for (d=0; d<10; d++)
-//            {
-//                __delay_cycles(3000000);
-//            }
-//            *p3out ^= 0b00000001; //Set direction of 3.0 to low
+//        if (*p3in & 0b01000000) //Pin 3.6 when uncommented can be connected to ground to turn the system off and pwr 3.3V to turn the system on (uncomment lines 80 - 84 to make this work)
+//        {
+//            *p3out |= 0b00000001; //Set direction of 3.0 to high <--Output Pin 3.0 is set high to move system left when looking from the front
 //
-//            for (x = 0; x < 200; x++)
-//            {
-//                *p2out |= 0b00001100; //step pin high
-//                int e;
-//                for (e=0; e<5000; e++)
+//                for (x = 0; x < 3200; x++) // this loop runs it left (when the center is x<1000 it runs for 1 second so you do the math)
 //                {
-//                    __delay_cycles(1500);
+//                    *p2out |= 0b00001100; //step pin high (turn it off
+//                    int dog;
+//                    for (dog=0; dog< 1; dog++)
+//                    {
+//                        __delay_cycles(1500);
+//                    }
+//                    P2OUT ^= 0b00001100; //step pin high
+//                    int cat;
+//                    for (cat=0; cat< 1; cat++)
+//                    {
+//                        __delay_cycles(1500);
+//                    }
 //                }
-//                *p2out ^= 0b00001100; //step pin high
-//                int c;
-//                for (c=0; c<5000; c++)
-//                {
-//                    __delay_cycles(1500);
-//                }
-//            }
+             *p3out &= 0x00; //when this is set to zero, system will move to the right when turned on
+                 for (x = 0; x<3200; x++)
+                 {
+                       *p2out |= 0b00001100; //step pin high
+                       int doug;
+                       for (doug=0; doug< 1; doug++)
+                       {
+                           __delay_cycles(1500);
+                       }
+                       *p2out ^= 0b00001100; //step pin high
+                       int caut;
+                       for (caut=0; caut< 1; caut++)
+                       {
+                           __delay_cycles(1500);
+                       }
+                 }
 
-    }
+//        }
+//        else //this else statement needs to be ucommented to have pin 3.6 turn on and off the system
+//        {
+//            *p2out &= 0x00;
+//        }
+            }
+
+
 }
 //void loop()
 //{
