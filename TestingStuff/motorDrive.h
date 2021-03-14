@@ -7,24 +7,30 @@
 
 #ifndef MOTORDRIVE_H_
 #define MOTORDRIVE_H_
-#include "encoder.h"
 
-#define M1_PIN P5
-#define M1_BIT (BIT2|BIT7)
-#define M2_PIN P3
-#define M2_BIT (BIT6|BIT0)
+#include "msp.h"
 
-#define Left_PIN P4
-#define Left_BIT BIT4
-#define Right_PIN P4
-#define Right_BIT BIT7
+#define M1_CW_PIN P2
+#define M1_CW BIT4
 
-void setMaxPowDrive(uint32_t newPow);
+#define M2_CW_PIN P2
+#define M2_CW BIT6
+
+#define M1_CCW_PIN P3
+#define M1_CCW BIT6
+
+#define M2_CCW_PIN P1
+#define M2_CCW BIT7
+
+#define M1_PWM_PIN P2
+#define M1_PWM BIT5
+
+#define M2_PWM_PIN P3
+#define M2_PWM BIT0
+
 void initMotorDrive();
 void setSpeed(int32_t pow);
-uint8_t getError();
-void resetError();
-void disableLeftError();
-void enableError();
-void disableRightError();
+void initInterruptA0(uint32_t startVal);
+void TA0_0_IRQHandler();
+
 #endif /* MOTORDRIVE_H_ */
