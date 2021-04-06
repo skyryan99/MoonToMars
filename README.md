@@ -13,7 +13,7 @@ Pins in use:
 -Pin 1.6: x-axis motor DIR+
 -Pin 2.3: x-axis motor PUL+
 -Pin 5.0: x-axis motor ENA+
--Pin 2.6 (duplicate): Load Cell Orange SCK
--Pin 6.4: Load Cell Yellow SCK
--Pin 1.5: Load Cell Orange DT
--Pin 1.3: Load Cell Yellow SCK
+-Pin 2.6 (duplicate): Load Cell 2 SCK
+-Pin 6.4: Load Cell 1 SCK
+-Pin 1.5: Load Cell 2 DT
+-Pin 1.3: Load Cell 1 SCK
