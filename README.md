@@ -3,7 +3,7 @@ Cal Poly 2020/21 ME 428-429-430 Senior Project
 
 This is the place to add files for the Moon to Mars Ice and Prospecting Challenge
 
-Pins in use:
+Microcontroller Pins in use:
 -Pin 2.4: z-axis motor1 PWMA
 -Pin 2.6: z-axis motor2 PWMA
 -Pin 3.6: z-axis motor1 INA
