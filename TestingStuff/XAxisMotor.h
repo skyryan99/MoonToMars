@@ -13,7 +13,7 @@
 #define PUL_PIN P2
 #define PUL_BIT BIT3
 #define ENA_PIN P5
-#define ENA_BIT BIT1
+#define ENA_BIT BIT0
 
 void MoveLeft(uint32_t runtime)
 void MoveRight(uint32_t runtime)
