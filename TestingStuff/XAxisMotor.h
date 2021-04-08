@@ -8,6 +8,13 @@
 #ifndef XAXISMOTOR_H_
 #define XAXISMOTOR_H_
 
+#define DIR_PIN P1
+#define DIR_BIT BIT6
+#define PUL_PIN P2
+#define PUL_BIT BIT3
+#define ENA_PIN P5
+#define ENA_BIT BIT1
+
 #define pin2out (0x40004c03)
 #define pin2dir (0x40004c05)
 #define pin1in (0x40004c00)
