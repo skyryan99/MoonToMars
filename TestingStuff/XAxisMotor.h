@@ -15,7 +15,8 @@
 #define ENA_PIN P5
 #define ENA_BIT BIT0
 
-void MoveLeft(uint32_t runtime)
-void MoveRight(uint32_t runtime)
+void initStepperMotor();
+void MoveLeft(uint32_t runtime);
+void MoveRight(uint32_t runtime);
 
 #endif
