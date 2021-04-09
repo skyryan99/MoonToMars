@@ -3,6 +3,11 @@
 #include "motorDrive.h"
 #include "delay.h"
 
+void initStepperMotors()
+{
+    ;
+}
+
 //runtime is in milliseconds
 void MoveLeft(uint32_t runtime)
 {
