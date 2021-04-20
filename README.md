@@ -27,3 +27,5 @@ Microcontroller Pins in use:
 TO-DO:
 1. #include "encoder.h" in main.
 2. Add initMotorEncoder() to main.
+3. #include "limitSwitch.h" in main.
+4. Add initLimitSwitches() to main.
