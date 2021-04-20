@@ -23,9 +23,9 @@ Microcontroller Pins in use:
 - Pin 4.5: Bottom Auger Limit Switch
 - Pin 4.4: Left Limit Switch
 - Pin 4.2: Right Limit Switch
+- Pin 3.2: Drill Motor Encoder, Channel A
+- Pin 3.3: Drill Motor Encoder, Channel B
+- Pin 3.5: Auger Motor Encoder, Channel A
+- Pin 3.7: Auger Motor Encoder, Channel B
 
 TO-DO:
-1. #include "encoder.h" in main.
-2. Add initMotorEncoder() to main.
-3. #include "limitSwitch.h" in main.
-4. Add initLimitSwitches() to main.
