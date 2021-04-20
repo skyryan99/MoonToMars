@@ -17,6 +17,12 @@ Microcontroller Pins in use:
 - Pin 6.4: Load Cell 1 SCK
 - Pin 1.5: Load Cell 2 DT
 - Pin 1.3: Load Cell 1 SCK
+- Pin 5.5: Top Drill Limit Switch
+- Pin 5.4: Bottom Drill Limit Switch
+- Pin 4.7: Top Auger Limit Switch
+- Pin 4.5: Bottom Auger Limit Switch
+- Pin 4.4: Left Limit Switch
+- Pin 4.2: Right Limit Switch
 
 TO-DO:
 1. #include "encoder.h" in main.
