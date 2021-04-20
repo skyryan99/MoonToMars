@@ -5,6 +5,7 @@
 #include "encoder.h"
 #include "LoadCellDataCollection.h"
 #include <stdio.h>
+#include "stepperMotor.h"
 
 /**
  * main.c
@@ -21,15 +22,16 @@ void main(void)
     initLoadCells();
     initMotorDrives();
     initMotorEncoders();
+    initStepperMotor();
     initLimitSwitches();
 
-    uint32_t thresholdDown = 22.5;   //lbs
-    uint32_t thresholdUp = 20.2;     //lbs
+    uint32_t thresholdDown = 25;   //lbs
+    uint32_t thresholdUp = 20;     //lbs
 
     //printf("Direction? (up: 1, down: 2)\n");
     //scanf("%d", &dir);
 
-    dir = 2;
+    dir = 1;
 
     //****************
     while (1) {
@@ -37,9 +39,10 @@ void main(void)
             setSpeed(-1000);  //100% down
             //delay_ms(10000, clock_freq);   //10s
         }
-        else if (dir == 2)
+        else if (dir == 2) {
             setSpeed(1000);   //100% up
-            delay_ms(10000, clock_freq);    //10s
+            //delay_ms(10000, clock_freq);    //10s
+        }
         readLoadCells(thresholdDown, DOWN);
         setSpeed(0);
         //delay_ms(UINTMAX, clock_freq);

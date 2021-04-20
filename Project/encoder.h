@@ -9,17 +9,25 @@
 #define ENCODER_H_
 #include "msp.h"
 
-#define MA_PIN P3
-#define MA_BIT BIT2
-#define MB_PIN P3
-#define MB_BIT BIT3
+#define DRILL_A_PIN P3
+#define DRILL_A_BIT BIT2
+#define DRILL_B_PIN P3
+#define DRILL_B_BIT BIT3
+
+#define AUG_A_PIN P3
+#define AUG_A_BIT BIT0
+#define AUG_B_PIN P3
+#define AUG_B_BIT BIT1
 enum DIR{CLOCKWISE,NOTUSED,COUNTERCLOCKWISE};
 
 void initMotorEncoders();
-void setValMot(int32_t newVal);
-enum DIR getDirMot();
-int32_t getValMot();
-uint8_t newValMot();
-void setMaxRot(int32_t max);
+void setValDrill(int32_t newVal);
+enum DIR getDirDrill();
+int32_t getValDrill();
+uint8_t newValDrill();
+void setValAug(int32_t newVal);
+enum DIR getDirAug();
+int32_t getValAug();
+uint8_t newValAug();
 
 #endif /* ENCODER_H_ */

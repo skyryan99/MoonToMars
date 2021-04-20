@@ -9,109 +9,231 @@
 #include "encoder.h"
 #include "msp.h"
 
-static volatile int32_t valMot;//motor encoder value
-static volatile enum DIR dirMot;//motor direction
-static volatile uint8_t updateMot;//if there is a new motor value to display
+static volatile int32_t valDrill;//motor encoder value
+static volatile enum DIR dirDrill;//motor direction
+static volatile int32_t valAug;//motor encoder value
+static volatile enum DIR dirAug;//motor direction
+static volatile uint8_t updateDrill;//if there is a new motor value to display
+static volatile uint8_t updateAug;//if there is a new motor value to display
 /*initializes the 2 motor encoder input channels to inputs and enables interrupt for the two pins
 */
 void initMotorEncoders(){
-    MA_PIN->SEL0 &= ~MA_BIT;
-    MA_PIN->SEL1 &= ~MA_BIT;
-    MA_PIN->DIR  &= ~MA_BIT;
-    MB_PIN->SEL0 &= ~MB_BIT;
-    MB_PIN->SEL1 &= ~MB_BIT;
-    MB_PIN->DIR  &= ~MB_BIT;
+    DRILL_A_PIN->SEL0 &= ~DRILL_A_BIT;
+    DRILL_A_PIN->SEL1 &= ~DRILL_A_BIT;
+    DRILL_A_PIN->DIR  &= ~DRILL_A_BIT;
+    DRILL_B_PIN->SEL0 &= ~DRILL_B_BIT;
+    DRILL_B_PIN->SEL1 &= ~DRILL_B_BIT;
+    DRILL_B_PIN->DIR  &= ~DRILL_B_BIT;
+
+    AUG_A_PIN->SEL0 &= ~AUG_A_BIT;
+    AUG_A_PIN->SEL1 &= ~AUG_A_BIT;
+    AUG_A_PIN->DIR  &= ~AUG_A_BIT;
+    AUG_B_PIN->SEL0 &= ~AUG_B_BIT;
+    AUG_B_PIN->SEL1 &= ~AUG_B_BIT;
+    AUG_B_PIN->DIR  &= ~AUG_B_BIT;
+
+    printf("1\n");
+
     NVIC_EnableIRQ(PORT3_IRQn);//need to change if change encoder pins
-    MA_PIN->IE |= MA_BIT;
-    MB_PIN->IE |= MB_BIT;
-    MA_PIN->IES &= ~MA_BIT;//rising edge
-    MB_PIN->IES &= ~MB_BIT;//rising edge
-    dirMot = CLOCKWISE;
-    updateMot = 0;
-    valMot = 0;//motor default value is 0
+
+    printf("2\n");
+
+    DRILL_A_PIN->IE |= DRILL_A_BIT;
+    DRILL_B_PIN->IE |= DRILL_B_BIT;
+    DRILL_A_PIN->IES &= ~DRILL_A_BIT;//rising edge
+    DRILL_B_PIN->IES &= ~DRILL_B_BIT;//rising edge
+
+    printf("3\n");
+
+    AUG_A_PIN->IE |= AUG_A_BIT;
+    printf("3.1\n");
+    AUG_B_PIN->IE |= AUG_B_BIT;
+    printf("3.2\n");
+    AUG_A_PIN->IES &= ~AUG_A_BIT;//rising edge
+    printf("3.3\n");
+    AUG_B_PIN->IES &= ~AUG_B_BIT;//rising edge
+
+    printf("4\n");
+
+    dirDrill = CLOCKWISE;
+    dirAug = CLOCKWISE;
+    updateDrill = 0;
+    updateAug = 0;
+    valDrill = 0;//motor default value is 0
+    valAug = 0;
 }
 
 /*Set the motor encoder to a new value
 */
-void setValMot(int32_t newVal){
-    valMot = newVal;
+void setValDrill(int32_t newVal){
+    valDrill = newVal;
 }
 
 /*gets the current direction of the motor
 */
-enum DIR getDirMot(){
-    return dirMot;
+enum DIR getDirDrill(){
+    return dirDrill;
 }
 
 /*gets the current value of the motor
 */
-int32_t getValMot(){
-    return valMot;
+int32_t getValDrill(){
+    return valDrill;
 }
 
 /*Checks if there is a new value of the motor encoder
 */
-uint8_t newValMot ()
+uint8_t newValDrill ()
 {
-    if(updateMot) {
-        updateMot =0;
+    if(updateDrill) {
+        updateDrill = 0;
         return 1;
     }
     return 0;
 }
 
+/*Set the motor encoder to a new value
+*/
+void setValAug(int32_t newVal){
+    valAug = newVal;
+}
+
+/*gets the current direction of the motor
+*/
+enum DIR getDirAug(){
+    return dirAug;
+}
+
+/*gets the current value of the motor
+*/
+int32_t getValAug(){
+    return valAug;
+}
+
+/*Checks if there is a new value of the motor encoder
+*/
+uint8_t newValAug ()
+{
+    if(updateAug) {
+        updateAug = 0;
+        return 1;
+    }
+    return 0;
+}
 /*If the motor channel A pin changed value. Same type of code to the angle sensor just inverted.
 * Interrupt if channel A of the motor encoder changes.
 * depending on weather we are here becauese of a falling edge or a rising edge on the sensor means a different direction
 * The direction is also dependent on what is the value of channel B
 */
-void motorAPin() {
-    MA_PIN->IFG &= ~MA_BIT;
-    if(MA_PIN->IES & MA_BIT){//here becauese falling edge
-        if(MB_PIN->IN & MB_BIT){//B HIGH
-            dirMot = CLOCKWISE;
+void drillAPin() {
+    DRILL_A_PIN->IFG &= ~DRILL_A_BIT;
+    if(DRILL_A_PIN->IES & DRILL_A_BIT){//here becauese falling edge
+        if(DRILL_B_PIN->IN & DRILL_B_BIT){//B HIGH
+            dirDrill = CLOCKWISE;
         }else{//B Low
-            dirMot = COUNTERCLOCKWISE;
+            dirDrill = COUNTERCLOCKWISE;
         }
     }else{//here b/c rising edge
-        if(MB_PIN->IN & MB_BIT){//B HIGH
-            dirMot = COUNTERCLOCKWISE;
+        if(DRILL_B_PIN->IN & DRILL_B_BIT){//B HIGH
+            dirDrill = COUNTERCLOCKWISE;
         }else{//B Low
-            dirMot = CLOCKWISE;
+            dirDrill = CLOCKWISE;
         }
     }
-    MA_PIN->IES ^= MA_BIT;//change channel A to toggle a falling edge or a rising edge to trigger at. Do this to catch any change
+    DRILL_A_PIN->IES ^= DRILL_A_BIT;//change channel A to toggle a falling edge or a rising edge to trigger at. Do this to catch any change
 }
 /*If the motor channel B pin changed value. Same type of code to the angle sensor just inverted.
 * Interrupt if channel B of the motor encoder changes.
 * depending on weather we are here becauese of a falling edge or a rising edge on the sensor means a different direction
 * The direction is also dependent on what is the value of channel A
 */
-void motorBPin() {
-    MB_PIN->IFG &= ~MB_BIT;
-    if(MB_PIN->IES & MB_BIT){//here becauese falling edge
-        if(MA_PIN->IN & MA_BIT){//A HIGH
-            dirMot = COUNTERCLOCKWISE;
+void drillBPin() {
+    DRILL_B_PIN->IFG &= ~DRILL_B_BIT;
+    if(DRILL_B_PIN->IES & DRILL_B_BIT){//here becauese falling edge
+        if(DRILL_A_PIN->IN & DRILL_A_BIT){//A HIGH
+            dirDrill = COUNTERCLOCKWISE;
         }else{//A Low
-            dirMot = CLOCKWISE;
+            dirDrill = CLOCKWISE;
         }
     }else{//here b/c rising edge
-        if(MA_PIN->IN & MA_BIT){//B HIGH
-            dirMot = CLOCKWISE;
+        if(DRILL_A_PIN->IN & DRILL_A_BIT){//B HIGH
+            dirDrill = CLOCKWISE;
         }else{//B Low
-            dirMot = COUNTERCLOCKWISE;
+            dirDrill = COUNTERCLOCKWISE;
         }
     }
-    MB_PIN->IES ^= MB_BIT;//change channel B to toggle a falling edge or a rising edge to trigger at. Do this to catch any change
+    DRILL_B_PIN->IES ^= DRILL_B_BIT;//change channel B to toggle a falling edge or a rising edge to trigger at. Do this to catch any change
 }
 
-void PORT3_IRQHandler() {//for MA_PIN and MB_PIN
-    if(MA_PIN->IFG & MA_BIT){//if the motor encoder channel A changed or channel B changed
-        motorAPin();
+void augAPin() {
+    AUG_A_PIN->IFG &= ~AUG_A_BIT;
+    if (AUG_A_PIN->IES & AUG_A_BIT) {//here becauese falling edge
+        if (AUG_B_PIN->IN & AUG_B_BIT) {//B HIGH
+            dirAug = CLOCKWISE;
+        } else {//B Low
+            dirAug = COUNTERCLOCKWISE;
+        }
+    } else {//here b/c rising edge
+        if (AUG_B_PIN->IN & AUG_B_BIT) {//B HIGH
+            dirAug = COUNTERCLOCKWISE;
+        } else {//B Low
+            dirAug = CLOCKWISE;
+        }
     }
-    else{
-        motorBPin();
+    AUG_A_PIN->IES ^= AUG_A_BIT;//change channel A to toggle a falling edge or a rising edge to trigger at. Do this to catch any change
+}
+/*If the motor channel B pin changed value. Same type of code to the angle sensor just inverted.
+* Interrupt if channel B of the motor encoder changes.
+* depending on weather we are here becauese of a falling edge or a rising edge on the sensor means a different direction
+* The direction is also dependent on what is the value of channel A
+*/
+void augBPin() {
+    AUG_B_PIN->IFG &= ~AUG_B_BIT;
+    if(AUG_B_PIN->IES & AUG_B_BIT){//here becauese falling edge
+        if(AUG_A_PIN->IN & AUG_A_BIT){//A HIGH
+            dirAug = COUNTERCLOCKWISE;
+        }else{//A Low
+            dirAug = CLOCKWISE;
+        }
+    }else{//here b/c rising edge
+        if(AUG_A_PIN->IN & AUG_A_BIT){//B HIGH
+            dirAug = CLOCKWISE;
+        }else{//B Low
+            dirAug = COUNTERCLOCKWISE;
+        }
     }
-    valMot += (dirMot - 1);//Clockwise is 0 and COUNTERCLOCKWISE is 2. so subtracting 1 lets me do quick math to add or subtract
-    updateMot = 1;//there is a new value to read from the motor encoder
+    AUG_B_PIN->IES ^= AUG_B_BIT;//change channel B to toggle a falling edge or a rising edge to trigger at. Do this to catch any change
+}
+
+void PORT3_IRQHandler() {//for DRILL_A_PIN and DRILL_B_PIN and AUG_A_PIN and AUG_B_PIN
+    printf("here\n");
+    if(DRILL_A_PIN->IFG & DRILL_A_BIT){//if the motor encoder channel A changed or channel B changed
+        printf("here 1\n");
+        drillAPin();
+        valDrill += (dirDrill - 1);//Clockwise is 0 and COUNTERCLOCKWISE is 2. so subtracting 1 lets me do quick math to add or subtract
+        updateDrill = 1;//there is a new value to read from the motor encoder
+        return;
+    }
+    else if (DRILL_B_PIN->IFG & DRILL_B_BIT) {
+        printf("here 2\n");
+        drillBPin();
+        valDrill += (dirDrill - 1);//Clockwise is 0 and COUNTERCLOCKWISE is 2. so subtracting 1 lets me do quick math to add or subtract
+        updateDrill = 1;//there is a new value to read from the motor encoder
+        return;
+    }
+
+    if(AUG_A_PIN->IFG & AUG_A_BIT){//if the motor encoder channel A changed or channel B changed
+        printf("here 3\n");
+        augAPin();
+        valAug += (dirAug - 1);//Clockwise is 0 and COUNTERCLOCKWISE is 2. so subtracting 1 lets me do quick math to add or subtract
+        updateAug = 1;//there is a new value to read from the motor encoder
+        return;
+    }
+    else {
+        printf("here 4\n");
+        augBPin();
+        valAug += (dirAug - 1);//Clockwise is 0 and COUNTERCLOCKWISE is 2. so subtracting 1 lets me do quick math to add or subtract
+        updateAug = 1;//there is a new value to read from the motor encoder
+        return;
+    }
 }
