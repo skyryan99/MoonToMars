@@ -60,14 +60,12 @@ void initLimitSwitches() {
     error = 0; //not in error state yet
 }
 
-/*lets the user check if we have entered an error state
-*/
+/*lets the user check if we have entered an error state*/
 uint8_t getError() {
     return error;
 }
 
-/*reset error state to normal. This hopes the user knows why they entered the error state and not going to kill the cart
-*/
+/*reset error state to normal. This hopes the user knows why they entered the error state and not going to damage shit*/
 void resetError() {
     error = 0;
 }
