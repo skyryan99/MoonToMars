@@ -17,3 +17,7 @@ Microcontroller Pins in use:
 - Pin 6.4: Load Cell 1 SCK
 - Pin 1.5: Load Cell 2 DT
 - Pin 1.3: Load Cell 1 SCK
+
+TO-DO:
+1. #include "encoder.h" in main.
+2. Add initMotorEncoder() to main.
