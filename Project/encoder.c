@@ -1,3 +1,4 @@
+
 /*
  * encoder.c
  *
@@ -13,7 +14,7 @@ static volatile enum DIR dirMot;//motor direction
 static volatile uint8_t updateMot;//if there is a new motor value to display
 /*initializes the 2 motor encoder input channels to inputs and enables interrupt for the two pins
 */
-void initMotorEncoder(){
+void initMotorEncoders(){
     MA_PIN->SEL0 &= ~MA_BIT;
     MA_PIN->SEL1 &= ~MA_BIT;
     MA_PIN->DIR  &= ~MA_BIT;

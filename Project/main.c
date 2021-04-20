@@ -1,63 +1,50 @@
 #include "msp.h"
-#include <stdio.h>
 #include "motorDrive.h"
 #include "delay.h"
+#include "limitSwitch.h"
+#include "encoder.h"
 #include "LoadCellDataCollection.h"
+#include <stdio.h>
 
 /**
  * main.c
  */
 
+#define UINTMAX 4294967295
+
 void main(void)
 {
-    /*
-     * CW is UP
-     * CCW is DOWN
-     *
-     */
+    int32_t dir;
 
     uint32_t clock_freq = FREQ_24MHZ;
     set_DCO(clock_freq);
-    initMotorDrive();
-    float thresholdDown = 30; //lbs
-    float thresholdUp = 5; //lbs
+    initLoadCells();
+    initMotorDrives();
+    initMotorEncoders();
+    initLimitSwitches();
+
+    uint32_t thresholdDown = 22.5;   //lbs
+    uint32_t thresholdUp = 20.2;     //lbs
+
+    //printf("Direction? (up: 1, down: 2)\n");
+    //scanf("%d", &dir);
+
+    dir = 2;
 
     //****************
     while (1) {
-        setSpeed(1000);                //100% down
-        delay_ms(5000000, clock_freq);      //5000s
-        readLoadCells(thresholdDown, 1);
+        if (dir == 1) {
+            setSpeed(-1000);  //100% down
+            //delay_ms(10000, clock_freq);   //10s
+        }
+        else if (dir == 2)
+            setSpeed(1000);   //100% up
+            delay_ms(10000, clock_freq);    //10s
+        readLoadCells(thresholdDown, DOWN);
         setSpeed(0);
-        readLoadCells(thresholdUp, 2);
+        //delay_ms(UINTMAX, clock_freq);
+        readLoadCells(thresholdUp, UP);
     }
-
-    delay_ms(500000, clock_freq);      //500s
     //****************
 
-
-
-    //*****************
-    setSpeed(-1000);                //100% down
-    delay_ms(500, clock_freq);      //0.5s
-
-    setSpeed(0);
-    readLoadCells(thresholdDown, 1);
-    printf("Done!");
-    delay_ms(9000000, clock_freq);    //9000s
-
-    //*****************
-
-    setSpeed(-1000);                //100% down
-    //blocks until WOB exceeds threshold
-    readLoadCells(thresholdDown, 1);
-
-    //delay_ms(90000, clock_freq);    //90s
-
-    setSpeed(0);                    //off
-    delay_ms(30000, clock_freq);    //5s
-
-    setSpeed(1000);                 //100% up
-    delay_ms(90000, clock_freq);    //90s
-
-    setSpeed(0);                    //off
 }

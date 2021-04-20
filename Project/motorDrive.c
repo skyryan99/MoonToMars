@@ -17,7 +17,7 @@ static uint8_t dir;
 
 
 /*Initializes the motor control output to outputs*/
-void initMotorDrive()
+void initMotorDrives()
 {
     /*PWM remain perma-on*/
     M1_PWM_PIN->SEL0 &= ~M1_PWM;

@@ -28,7 +28,7 @@
 #define M2_PWM_PIN P3
 #define M2_PWM BIT0
 
-void initMotorDrive();
+void initMotorDrives();
 void setSpeed(int32_t pow);
 void initInterruptA0(uint32_t startVal);
 void TA0_0_IRQHandler();

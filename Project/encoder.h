@@ -15,7 +15,7 @@
 #define MB_BIT BIT3
 enum DIR{CLOCKWISE,NOTUSED,COUNTERCLOCKWISE};
 
-void initMotorEncoder();
+void initMotorEncoders();
 void setValMot(int32_t newVal);
 enum DIR getDirMot();
 int32_t getValMot();

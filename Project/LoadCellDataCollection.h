@@ -21,10 +21,16 @@
 #define CLK_BIT_R BIT4
 #define OFFSET_R 8382000.0
 #define CAL_COUNT_R 554331.0
-#define CAL_WEIGHT 8
 
+#define DOWN 1
+#define UP 2
+#define CAL_WEIGHT 8
+#define BIAS 25.4 //lbs
+#define GAIN 146.2
+
+void initLoadCells();
 unsigned long readCount1();
 unsigned long readCount2();
-void readLoadCells(float threshhold, uint32_t run);
+void readLoadCells(uint32_t threshhold, uint8_t run);
 
 #endif /* LOADCELLDATACOLLECTION_H_ */
