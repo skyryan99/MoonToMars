@@ -28,7 +28,6 @@ Microcontroller Pins in use:
 - Pin 5.5: Auger Motor Encoder, Channel A
 - Pin 5.7: Auger Motor Encoder, Channel B
 - 
-
-![image](https://user-images.githubusercontent.com/77028155/115784974-b2b98000-a373-11eb-90d0-120377a2532d.png)
+![image](https://user-images.githubusercontent.com/77028155/115785719-ae419700-a374-11eb-8d6b-36e880bbd96c.png)
 
 TO-DO:
