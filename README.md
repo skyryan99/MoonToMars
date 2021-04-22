@@ -25,8 +25,8 @@ Microcontroller Pins in use:
 - Pin 4.2: Right Limit Switch
 - Pin 3.2: Drill Motor Encoder, Channel A
 - Pin 3.3: Drill Motor Encoder, Channel B
-- Pin 3.5: Auger Motor Encoder, Channel A
-- Pin 3.7: Auger Motor Encoder, Channel B
+- Pin 5.5: Auger Motor Encoder, Channel A
+- Pin 5.7: Auger Motor Encoder, Channel B
 - 
 ![image](https://user-images.githubusercontent.com/77028155/115460484-2ecd8f80-a1dd-11eb-9dea-5afc7f04bc35.png)
 
