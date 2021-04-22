@@ -17,7 +17,7 @@ Microcontroller Pins in use:
 - Pin 6.4: Load Cell 1 SCK
 - Pin 4.3: Load Cell 2 DT
 - Pin 1.5: Load Cell 1 DT
-- Pin 5.5: Top Drill Limit Switch
+- Pin 4.0: Top Drill Limit Switch
 - Pin 5.4: Bottom Drill Limit Switch
 - Pin 4.7: Top Auger Limit Switch
 - Pin 4.5: Bottom Auger Limit Switch
@@ -27,7 +27,9 @@ Microcontroller Pins in use:
 - Pin 3.3: Drill Motor Encoder, Channel B
 - Pin 5.5: Auger Motor Encoder, Channel A
 - Pin 5.7: Auger Motor Encoder, Channel B
-- 
-![image](https://user-images.githubusercontent.com/77028155/115785719-ae419700-a374-11eb-8d6b-36e880bbd96c.png)
+- Pin 5.5: Valve A
+- Pin 5.7: Valve B
+
+![image](https://user-images.githubusercontent.com/77028155/115784974-b2b98000-a373-11eb-90d0-120377a2532d.png)
 
 TO-DO:
