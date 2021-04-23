@@ -32,28 +32,18 @@ void initMotorEncoders(){
     AUG_B_PIN->SEL1 &= ~AUG_B_BIT;
     AUG_B_PIN->DIR  &= ~AUG_B_BIT;
 
-    printf("1\n");
-
     NVIC_EnableIRQ(PORT3_IRQn);//need to change if change encoder pins
-
-    printf("2\n");
+    NVIC_EnableIRQ(PORT5_IRQn);//need to change if change encoder pins
 
     DRILL_A_PIN->IE |= DRILL_A_BIT;
     DRILL_B_PIN->IE |= DRILL_B_BIT;
     DRILL_A_PIN->IES &= ~DRILL_A_BIT;//rising edge
     DRILL_B_PIN->IES &= ~DRILL_B_BIT;//rising edge
 
-    printf("3\n");
-
     AUG_A_PIN->IE |= AUG_A_BIT;
-    printf("3.1\n");
     AUG_B_PIN->IE |= AUG_B_BIT;
-    printf("3.2\n");
     AUG_A_PIN->IES &= ~AUG_A_BIT;//rising edge
-    printf("3.3\n");
     AUG_B_PIN->IES &= ~AUG_B_BIT;//rising edge
-
-    printf("4\n");
 
     dirDrill = CLOCKWISE;
     dirAug = CLOCKWISE;
@@ -206,34 +196,24 @@ void augBPin() {
 }
 
 void PORT3_IRQHandler() {//for DRILL_A_PIN and DRILL_B_PIN and AUG_A_PIN and AUG_B_PIN
-    printf("here\n");
-    if(DRILL_A_PIN->IFG & DRILL_A_BIT){//if the motor encoder channel A changed or channel B changed
-        printf("here 1\n");
+    if (DRILL_A_PIN->IFG & DRILL_A_BIT) {//if the motor encoder channel A changed or channel B changed
         drillAPin();
-        valDrill += (dirDrill - 1);//Clockwise is 0 and COUNTERCLOCKWISE is 2. so subtracting 1 lets me do quick math to add or subtract
-        updateDrill = 1;//there is a new value to read from the motor encoder
-        return;
+
     }
     else if (DRILL_B_PIN->IFG & DRILL_B_BIT) {
-        printf("here 2\n");
         drillBPin();
-        valDrill += (dirDrill - 1);//Clockwise is 0 and COUNTERCLOCKWISE is 2. so subtracting 1 lets me do quick math to add or subtract
-        updateDrill = 1;//there is a new value to read from the motor encoder
-        return;
     }
+    valDrill += (dirDrill - 1);//Clockwise is 0 and COUNTERCLOCKWISE is 2. so subtracting 1 lets me do quick math to add or subtract
+    updateDrill = 1;//there is a new value to read from the motor encoder
+}
 
+void PORT5_IRQHandler() {//for DRILL_A_PIN and DRILL_B_PIN and AUG_A_PIN and AUG_B_PIN
     if(AUG_A_PIN->IFG & AUG_A_BIT){//if the motor encoder channel A changed or channel B changed
-        printf("here 3\n");
         augAPin();
-        valAug += (dirAug - 1);//Clockwise is 0 and COUNTERCLOCKWISE is 2. so subtracting 1 lets me do quick math to add or subtract
-        updateAug = 1;//there is a new value to read from the motor encoder
-        return;
     }
-    else {
-        printf("here 4\n");
+    else if (AUG_B_PIN->IFG & AUG_B_BIT) {
         augBPin();
-        valAug += (dirAug - 1);//Clockwise is 0 and COUNTERCLOCKWISE is 2. so subtracting 1 lets me do quick math to add or subtract
-        updateAug = 1;//there is a new value to read from the motor encoder
-        return;
     }
+    valAug += (dirAug - 1);//Clockwise is 0 and COUNTERCLOCKWISE is 2. so subtracting 1 lets me do quick math to add or subtract
+    updateAug = 1;//there is a new value to read from the motor encoder
 }

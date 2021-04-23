@@ -1,5 +1,5 @@
 #include "msp.h"
-#include "motorDrive.h"
+#include "motorDriver.h"
 #include "delay.h"
 #include "limitSwitch.h"
 #include "encoder.h"
@@ -31,22 +31,22 @@ void main(void)
     //printf("Direction? (up: 1, down: 2)\n");
     //scanf("%d", &dir);
 
-    dir = 1;
+    dir = 2;
 
     //****************
     while (1) {
         if (dir == 1) {
             setSpeed(-1000);  //100% down
-            //delay_ms(10000, clock_freq);   //10s
+            delay_ms(10000, clock_freq);   //10s
         }
         else if (dir == 2) {
             setSpeed(1000);   //100% up
-            //delay_ms(10000, clock_freq);    //10s
+            delay_ms(10000, clock_freq);    //10s
         }
-        readLoadCells(thresholdDown, DOWN);
+        //readLoadCells(thresholdDown, DOWN);
         setSpeed(0);
         //delay_ms(UINTMAX, clock_freq);
-        readLoadCells(thresholdUp, UP);
+        //readLoadCells(thresholdUp, UP);
     }
     //****************
 

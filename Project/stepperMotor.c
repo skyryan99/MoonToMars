@@ -1,6 +1,6 @@
 #include "msp.h"
 #include <stdint.h>
-#include "motorDrive.h"
+#include "motorDriver.h"
 #include "delay.h"
 #include "stepperMotor.h"
 

@@ -6,7 +6,7 @@
  */
 #include "msp.h"
 #include "limitSwitch.h"
-#include "motorDrive.h"
+#include "motorDriver.h"
 
 static uint8_t error;//if we hit the limit switch go into error state
 //so we can't drive motor past limit switches

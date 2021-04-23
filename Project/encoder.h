@@ -14,10 +14,10 @@
 #define DRILL_B_PIN P3
 #define DRILL_B_BIT BIT3
 
-#define AUG_A_PIN P3
-#define AUG_A_BIT BIT0
-#define AUG_B_PIN P3
-#define AUG_B_BIT BIT1
+#define AUG_A_PIN P5
+#define AUG_A_BIT BIT5
+#define AUG_B_PIN P5
+#define AUG_B_BIT BIT7
 enum DIR{CLOCKWISE,NOTUSED,COUNTERCLOCKWISE};
 
 void initMotorEncoders();
