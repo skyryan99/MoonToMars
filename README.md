@@ -6,10 +6,10 @@ This is the place to add files for the Moon to Mars Ice and Prospecting Challeng
 Microcontroller Pins in use:
 - Pin 2.5: Auger Motor PWMA
 - Pin 3.0: Drill Motor PWMA
-- Pin 2.4: Auger Motor INA
-- Pin 2.6: Drill Motor INA
-- Pin 3.6: Auger Motor INB
-- Pin 1.7: Drill Motor INB
+- Pin 2.4: Auger Motor INA1
+- Pin 2.6: Drill Motor INA1
+- Pin 3.6: Auger Motor INA2
+- Pin 1.7: Drill Motor INA2
 - Pin 1.6: x-axis motor DIR+
 - Pin 2.3: x-axis motor PUL+
 - Pin 5.0: x-axis motor ENA+
