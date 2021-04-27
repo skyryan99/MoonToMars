@@ -10,7 +10,7 @@
 
 #define PUMP1_PIN P6
 #define PUMP1_BIT BIT6   //Connect to IN1
-#define PUMP2_PIN P5
+#define PUMP2_PIN P6
 #define PUMP2_BIT BIT7   //Connect to IN2
 
 void PumpForward(void);
