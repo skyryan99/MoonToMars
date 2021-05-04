@@ -1,7 +1,7 @@
 /*
  * encoder.h
  *
- *  Created on: Feb 31, 2021
+ *  Created on: Feb 21, 2021
  *      Author: Schuyler Ryan
  */
 
@@ -9,29 +9,25 @@
 #define ENCODER_H_
 #include "msp.h"
 
-#define A_PIN P5
-#define A_BIT BIT5
-#define B_PIN P6
-#define B_BIT BIT4
+#define DRILL_A_PIN P3
+#define DRILL_A_BIT BIT2
+#define DRILL_B_PIN P3
+#define DRILL_B_BIT BIT3
 
-#define MA_PIN P3
-#define MA_BIT BIT2
-#define MB_PIN P3
-#define MB_BIT BIT3
+#define AUG_A_PIN P5
+#define AUG_A_BIT BIT5
+#define AUG_B_PIN P5
+#define AUG_B_BIT BIT7
 enum DIR{CLOCKWISE,NOTUSED,COUNTERCLOCKWISE};
 
-void initMotorEncoder();
-void initRotEncoder();
-void setValRot(int32_t newVal);
-void setValMot(int32_t newVal);
-enum DIR getDirRot();
-enum DIR getDirMot();
-int32_t getValRot();
-int32_t getValMot();
-uint8_t newValRot();
-uint8_t newValMot();
-void setMaxRot(int32_t max);
-
-void setMinRot(int32_t min);
+void initMotorEncoders();
+void setValDrill(int32_t newVal);
+enum DIR getDirDrill();
+int32_t getValDrill();
+uint8_t newValDrill();
+void setValAug(int32_t newVal);
+enum DIR getDirAug();
+int32_t getValAug();
+uint8_t newValAug();
 
 #endif /* ENCODER_H_ */

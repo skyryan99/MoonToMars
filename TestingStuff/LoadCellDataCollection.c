@@ -1,75 +1,16 @@
 #include "msp.h"
+#include "LoadCellDataCollection.h"
 #include <stdio.h>
 
 /**
- * main.c
  * 1. Provide 25 clock input signals to set input channel A to a gain of 128
  * 2. Initiate data collection by sending SDA low
  * 3. Transfer bits
  */
-#define DATA_PIN_L P1
-#define DATA_BIT_L BIT5
-#define CLK_PIN_L P2
-#define CLK_BIT_L BIT6
-#define OFFSET_L 8388007.0
-#define CAL_COUNT_L 706550.0
 
-#define DATA_PIN_R P4
-#define DATA_BIT_R BIT3
-#define CLK_PIN_R P6
-#define CLK_BIT_R BIT4
-#define OFFSET_R 8382000.0
-#define CAL_COUNT_R 554331.0
-#define CAL_WEIGHT 8
-
-unsigned long readCount1(void);
-unsigned long readCount2(void);
-
-int main(void){
-    unsigned char test = 1;
-    uint32_t val1;
-    uint32_t val2;
-    //uint32_t left_val;
-    //uint32_t right_val;
-    //uint32_t BUFFER[30];
-    uint32_t mied=0;
-    uint32_t offset=0;
-    uint8_t j = 0;
-    float WOB=0;
-
-    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
-
-    while(1){
-        while(j<20){
-            val1 = readCount1();
-            //left_val = (val1 - 8388007.0)/(706550.0*8);
-            val2 = readCount2();
-            //right_val = (val2 - 8382000.0)/(554331.0*8);
-            //BUFFER[j]=val2;
-            WOB = (((val1 - OFFSET_L)/(CAL_COUNT_L*CAL_WEIGHT))+((val2 - OFFSET_R)/(CAL_COUNT_R*CAL_WEIGHT)))*4.45*9.81; // Add both load cell values
-            //printf("WOB [N]: %.2f \n\r",(((val1 - OFFSET_L)/(CAL_COUNT_L*CAL_WEIGHT))+((val2 - OFFSET_R)/(CAL_COUNT_R*CAL_WEIGHT)))*4.45*9.81);// Print both values from LOAD CELL PLATFORM
-            printf("WOB [N]: %.2f \n\r",WOB);
-            //mied+=BUFFER[j];
-            j++;
-        }
-        j=0;
-        mied/=20;
-
-        if (test==0){
-            offset=mied;
-            test=1;
-        }
-        //mied-=offset;
-
-        //printf("mied=%lu \r\n",mied);
-        //zero 8369500
-    }
-}
-
-unsigned long readCount1(void)
+void initLoadCells()
 {
-    unsigned long count;
-    unsigned char i;
+    /*Load Cell 1*/
     /* Input - DT - on P1.5*/
     DATA_PIN_L->SEL1 &= ~(DATA_BIT_L);                   /* Use GPIO */
     DATA_PIN_L->SEL0 &= ~(DATA_BIT_L);
@@ -77,33 +18,15 @@ unsigned long readCount1(void)
     DATA_PIN_L->REN |= DATA_BIT_L;                       /*enable pull resistor*/
     DATA_PIN_L->OUT |= DATA_BIT_L;                       /*select pull UP resistor*/
 
-    /* Output - SCK - on P2.6*/
+    /* Output - SCK - on P6.1*/
     CLK_PIN_L->SEL1 &= ~(CLK_BIT_L);                     /* Use GPIO */
     CLK_PIN_L->SEL0 &= ~(CLK_BIT_L);
     CLK_PIN_L->DIR |= CLK_BIT_L;                         /*1 - output*/
 
     DATA_PIN_L->IN | DATA_BIT_L;                         /*set DT high*/
     CLK_PIN_L->OUT &= ~(CLK_BIT_L);                      /*set SCK low */
-    count = 0;
 
-    while(DATA_PIN_L->IN & DATA_BIT_L);                  /*stay in this loop if DT high*/
-
-    for(i=0;i<24;i++){
-        CLK_PIN_L->OUT |= CLK_BIT_L;                      /*set SCLK high to initialize data collection*/
-        count<<=1;
-        CLK_PIN_L->OUT &= ~(CLK_BIT_L);                   /*set SCLK low to toggle clock*/
-        if(DATA_PIN_L->IN & DATA_BIT_L) count++;
-        }
-    CLK_PIN_L->OUT |= CLK_BIT_L;                          /*set SCLK high to toggle clock*/
-    count = count^0x800000;                               /* Read the MSB */
-    CLK_PIN_L->OUT &= ~(CLK_BIT_L);                       /*set SCLK low to toggle clock*/
-    return(count);
-}
-
-unsigned long readCount2(void)
-{
-    unsigned long count2;
-    unsigned char z;
+    /*Load Cell 2*/
     /* Input - DT - on P4.3*/
     DATA_PIN_R->SEL1 &= ~(DATA_BIT_R);                    /* Use GPIO */
     DATA_PIN_R->SEL0 &= ~(DATA_BIT_R);
@@ -118,18 +41,75 @@ unsigned long readCount2(void)
 
     DATA_PIN_R->IN | DATA_BIT_R;                          /*set DT high*/
     CLK_PIN_R->OUT &= ~(CLK_BIT_R);                       /*set SCK low */
-    count2 = 0;
+}
 
-    while(DATA_PIN_R->IN & DATA_BIT_R);                   /*stay in this loop if DT high*/
+void readLoadCells(uint32_t threshold, uint8_t run)
+{
+    unsigned long val1, val2;
+    float WOB = 0;
 
-    for(z=0;z<24;z++){
+    while (1) {
+
+        /*Collect readings*/
+        val1 = readCount1();
+        val2 = readCount2();
+
+        /*Calculate WOB*/
+        WOB = (((val1 - OFFSET_L) / (CAL_COUNT_L * CAL_WEIGHT)) + ((val2 - OFFSET_R) / (CAL_COUNT_R * CAL_WEIGHT))) * GAIN + BIAS; // Add both load cell values
+
+        /*Print data to screen*/
+        printf("WOB [N]: %.2f \n\r",WOB);
+
+        /*Break when WOB exceeds threshold*/
+        if (WOB > threshold && run == DOWN)
+            return;
+        /*Break as soon as WOB returns under threshold*/
+        else if (WOB < threshold && run == UP)
+            return;
+    }
+}
+
+unsigned long readCount1(void)
+{
+    unsigned long count = 0;
+    uint32_t i;
+
+    //if !(DATA_PIN_L->IN & DATA_BIT_L)                    /*stay in this loop if DT high*/
+    //    return 0;
+
+    for (i = 0; i < 24; i++) {
+        CLK_PIN_L->OUT |= CLK_BIT_L;                      /*set SCLK high to initialize data collection*/
+        count <<= 1;
+        CLK_PIN_L->OUT &= ~(CLK_BIT_L);                   /*set SCLK low to toggle clock*/
+        if (DATA_PIN_L->IN & DATA_BIT_L)
+            count++;
+    }
+
+    CLK_PIN_L->OUT |= CLK_BIT_L;                          /*set SCLK high to toggle clock*/
+    count = count^0x800000;                               /* Read the MSB */
+    CLK_PIN_L->OUT &= ~(CLK_BIT_L);                       /*set SCLK low to toggle clock*/
+
+    return count;
+}
+
+unsigned long readCount2(void)
+{
+    unsigned long count = 0;
+    uint32_t i;
+
+    //if !(DATA_PIN_R->IN & DATA_BIT_R)                   /*stay in this loop if DT high*/
+    //    return 0;
+
+    for (i = 0; i < 24; i++) {
         CLK_PIN_R->OUT |= CLK_BIT_R;                      /*set SCLK high to initialize data collection*/
-        count2<<=1;
+        count <<= 1;
         CLK_PIN_R->OUT &= ~(CLK_BIT_R);                   /*set SCLK low to toggle clock*/
-        if(DATA_PIN_R->IN & DATA_BIT_R) count2++;
-        }
+        if (DATA_PIN_R->IN & DATA_BIT_R)
+            count++;
+    }
+
     CLK_PIN_R->OUT |= CLK_BIT_R;                          /*set SCLK high to toggle clock*/
-    count2 = count2^0x800000;                             /* Read the MSB */
+    count = count^0x800000;                             /* Read the MSB */
     CLK_PIN_R->OUT &= ~(CLK_BIT_R);                       /*set SCLK low to toggle clock*/
-    return(count2);
+    return count;
 }

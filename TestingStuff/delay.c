@@ -41,10 +41,10 @@ void delay_us(uint32_t us, uint32_t freq) {
             __delay_cycles(1);   // delay 1 us
 }
 
-void set_DCO(uint32_t freq){
+void set_DCO(uint32_t freq) {
     uint32_t DCORSEL_val;
     uint32_t CTL1 = CS_CTL1_SELA_2 | CS_CTL1_SELS_3 | CS_CTL1_SELM_3;
-    if(freq == 48){
+    if(freq == 48) {
         /* Transition to VCORE Level 1: AM0_LDO --> AM1_LDO */
         while ((PCM->CTL1 & PCM_CTL1_PMR_BUSY));
         PCM->CTL0 = PCM_CTL0_KEY_VAL | PCM_CTL0_AMR_1;
