@@ -25,8 +25,8 @@
 #define DOWN 1
 #define UP 2
 #define CAL_WEIGHT 8
-#define BIAS 25.4 //lbs
-#define GAIN 146.2
+#define BIAS 26 //lbs
+#define GAIN 75
 
 void initLoadCells();
 unsigned long readCount1();
