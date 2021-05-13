@@ -30,7 +30,6 @@ Microcontroller Pins in use:
 - Pin 5.5: Valve A
 - Pin 5.7: Valve B
 
-![image](https://user-images.githubusercontent.com/77028155/118187782-4a027800-b3f4-11eb-80aa-f4b2dfb3fcf6.png)
-
+![image](https://user-images.githubusercontent.com/77028155/118193241-3a872d00-b3fc-11eb-9db4-af6711f70764.png)
 
 TO-DO:
