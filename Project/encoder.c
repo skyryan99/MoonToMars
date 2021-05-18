@@ -1,10 +1,11 @@
-
 /*
  * encoder.c
  *
  *  Created on: February 21, 2021
  *      Author: Schuyler Ryan
  */
+
+#include <stdio.h>
 
 #include "encoder.h"
 #include "msp.h"
@@ -17,7 +18,7 @@ static volatile uint8_t updateDrill;//if there is a new motor value to display
 static volatile uint8_t updateAug;//if there is a new motor value to display
 /*initializes the 2 motor encoder input channels to inputs and enables interrupt for the two pins
 */
-void initMotorEncoders(){
+void initZMotorEncoders() {
     DRILL_A_PIN->SEL0 &= ~DRILL_A_BIT;
     DRILL_A_PIN->SEL1 &= ~DRILL_A_BIT;
     DRILL_A_PIN->DIR  &= ~DRILL_A_BIT;
@@ -119,14 +120,18 @@ void drillAPin() {
     DRILL_A_PIN->IFG &= ~DRILL_A_BIT;
     if(DRILL_A_PIN->IES & DRILL_A_BIT){//here becauese falling edge
         if(DRILL_B_PIN->IN & DRILL_B_BIT){//B HIGH
+            //printf("AvB\n");
             dirDrill = CLOCKWISE;
         }else{//B Low
+            //printf("Av~B\n");
             dirDrill = COUNTERCLOCKWISE;
         }
     }else{//here b/c rising edge
         if(DRILL_B_PIN->IN & DRILL_B_BIT){//B HIGH
+            //printf("A^B\n");
             dirDrill = COUNTERCLOCKWISE;
         }else{//B Low
+            //printf("AvB\n");
             dirDrill = CLOCKWISE;
         }
     }
@@ -141,14 +146,18 @@ void drillBPin() {
     DRILL_B_PIN->IFG &= ~DRILL_B_BIT;
     if(DRILL_B_PIN->IES & DRILL_B_BIT){//here becauese falling edge
         if(DRILL_A_PIN->IN & DRILL_A_BIT){//A HIGH
+            //printf("BvA\n");
             dirDrill = COUNTERCLOCKWISE;
         }else{//A Low
+            //printf("Bv~A\n");
             dirDrill = CLOCKWISE;
         }
     }else{//here b/c rising edge
-        if(DRILL_A_PIN->IN & DRILL_A_BIT){//B HIGH
+        if(DRILL_A_PIN->IN & DRILL_A_BIT){//A HIGH
+            //printf("B^A\n");
             dirDrill = CLOCKWISE;
-        }else{//B Low
+        }else{//A Low
+            //printf("B^~A\n");
             dirDrill = COUNTERCLOCKWISE;
         }
     }
@@ -198,13 +207,13 @@ void augBPin() {
 void PORT3_IRQHandler() {//for DRILL_A_PIN and DRILL_B_PIN and AUG_A_PIN and AUG_B_PIN
     if (DRILL_A_PIN->IFG & DRILL_A_BIT) {//if the motor encoder channel A changed or channel B changed
         drillAPin();
-
     }
     else if (DRILL_B_PIN->IFG & DRILL_B_BIT) {
         drillBPin();
     }
     valDrill += (dirDrill - 1);//Clockwise is 0 and COUNTERCLOCKWISE is 2. so subtracting 1 lets me do quick math to add or subtract
     updateDrill = 1;//there is a new value to read from the motor encoder
+    dirDrill = NOUPDATE;
 }
 
 void PORT5_IRQHandler() {//for DRILL_A_PIN and DRILL_B_PIN and AUG_A_PIN and AUG_B_PIN
@@ -216,4 +225,5 @@ void PORT5_IRQHandler() {//for DRILL_A_PIN and DRILL_B_PIN and AUG_A_PIN and AUG
     }
     valAug += (dirAug - 1);//Clockwise is 0 and COUNTERCLOCKWISE is 2. so subtracting 1 lets me do quick math to add or subtract
     updateAug = 1;//there is a new value to read from the motor encoder
+    dirDrill = NOUPDATE;
 }

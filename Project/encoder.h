@@ -18,9 +18,9 @@
 #define AUG_A_BIT BIT5
 #define AUG_B_PIN P5
 #define AUG_B_BIT BIT7
-enum DIR{CLOCKWISE,NOTUSED,COUNTERCLOCKWISE};
+enum DIR{CLOCKWISE,NOUPDATE,COUNTERCLOCKWISE};
 
-void initMotorEncoders();
+void initZMotorEncoders();
 void setValDrill(int32_t newVal);
 enum DIR getDirDrill();
 int32_t getValDrill();

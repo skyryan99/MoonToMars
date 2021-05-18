@@ -16,7 +16,9 @@
 #define ENA_BIT BIT0
 
 void initStepperMotor();
-void MoveLeft(uint32_t runtime, uint32_t clock_freq);
-void MoveRight(uint32_t runtime, uint32_t clock_freq);
+void MoveLeft(uint32_t runtime);
+void MoveRight(uint32_t runtime);
+void initInterruptA1();
+void TA1_0_IRQHandler();
 
 #endif
