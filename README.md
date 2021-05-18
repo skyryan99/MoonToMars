@@ -18,11 +18,11 @@ Microcontroller Pins in use:
 - Pin 4.3: Load Cell 2 DT
 - Pin 1.5: Load Cell 1 DT
 - Pin 4.0: Top Drill Limit Switch
-- Pin 5.4: Bottom Drill Limit Switch
-- Pin 4.7: Top Auger Limit Switch
-- Pin 4.5: Bottom Auger Limit Switch
-- Pin 4.4: Left Limit Switch
-- Pin 4.2: Right Limit Switch
+- ~~Pin 5.4: Bottom Drill Limit Switch~~
+- ~~Pin 4.7: Top Auger Limit Switch~~
+- ~~Pin 4.5: Bottom Auger Limit Switch~~
+- ~~Pin 4.4: Left Limit Switch~~
+- ~~Pin 4.2: Right Limit Switch~~
 - Pin 3.2: Drill Motor Encoder, Channel A
 - Pin 3.3: Drill Motor Encoder, Channel B
 - Pin 5.5: Auger Motor Encoder, Channel A
