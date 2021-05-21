@@ -1,12 +1,16 @@
 #include "msp.h"
 #include "LoadCellDataCollection.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 /**
  * 1. Provide 25 clock input signals to set input channel A to a gain of 128
  * 2. Initiate data collection by sending SDA low
  * 3. Transfer bits
  */
+
+static float last;//keep track of last data point to filter random jumps
+static uint8_t repeat;//keep tracks of number of data points adjusted to ensure not stuck in permanent loop
 
 void initLoadCells()
 {
@@ -41,32 +45,42 @@ void initLoadCells()
 
     DATA_PIN_R->IN | DATA_BIT_R;                          /*set DT high*/
     CLK_PIN_R->OUT &= ~(CLK_BIT_R);                       /*set SCK low */
+
+    last = 4;//magic number. Will check if 3x greater to throw out points. First reading should never exceed 18
+    repeat = 0;
 }
 
-void readLoadCells(uint32_t threshold, uint8_t run)
+float readLoadCells()
 {
     unsigned long val1, val2;
-    float WOB = 0;
+    float WOB = 0, del;
 
-    while (1) {
+    /*Collect readings*/
+    val1 = readCount1();
+    val2 = readCount2();
 
-        /*Collect readings*/
-        val1 = readCount1();
-        val2 = readCount2();
+    /*Calculate WOB*/
+    WOB = (((val1 - OFFSET_L) / (CAL_COUNT_L * CAL_WEIGHT)) + ((val2 - OFFSET_R) / (CAL_COUNT_R * CAL_WEIGHT))) * GAIN + BIAS; // Add both load cell values
 
-        /*Calculate WOB*/
-        WOB = (((val1 - OFFSET_L) / (CAL_COUNT_L * CAL_WEIGHT)) + ((val2 - OFFSET_R) / (CAL_COUNT_R * CAL_WEIGHT))) * GAIN + BIAS; // Add both load cell values
+    del = abs(WOB - last);
 
-        /*Print data to screen*/
-        printf("WOB [N]: %.2f \n\r",WOB);
+    /*Prefilter bad data using last collected point*/
+    if (repeat < 3 && ((del > 15) || (del > (abs(last) + 1) * 3) || (del > (abs(WOB) + 1) * 3))) {//if wob is 15 more or less than last, throw out. FLAT VALUE
+        //Also if it is 3 times greater or lesser, we throw out. A small margin is used to not constantly throw out values floating near 0.
+        //We only repeat this 3 times in a row max, otherwise we could perma-loop
+        repeat++;
+        //printf("%.2f \n", last);
 
-        /*Break when WOB exceeds threshold*/
-        if (WOB > threshold && run == DOWN)
-            return;
-        /*Break as soon as WOB returns under threshold*/
-        else if (WOB < threshold && run == UP)
-            return;
+        return last;
     }
+
+    //reset repeat and last
+    repeat = 0;
+    last = WOB;
+
+    //printf("%.2f \n", WOB);
+
+    return WOB;
 }
 
 unsigned long readCount1(void)
@@ -74,8 +88,7 @@ unsigned long readCount1(void)
     unsigned long count = 0;
     uint32_t i;
 
-    //if !(DATA_PIN_L->IN & DATA_BIT_L)                    /*stay in this loop if DT high*/
-    //    return 0;
+    //while (DATA_PIN_L->IN & DATA_BIT_L);                    /*stay in this loop if DT high*/
 
     for (i = 0; i < 24; i++) {
         CLK_PIN_L->OUT |= CLK_BIT_L;                      /*set SCLK high to initialize data collection*/
@@ -97,8 +110,7 @@ unsigned long readCount2(void)
     unsigned long count = 0;
     uint32_t i;
 
-    //if !(DATA_PIN_R->IN & DATA_BIT_R)                   /*stay in this loop if DT high*/
-    //    return 0;
+    //while (DATA_PIN_R->IN & DATA_BIT_R);                   /*stay in this loop if DT high*/
 
     for (i = 0; i < 24; i++) {
         CLK_PIN_R->OUT |= CLK_BIT_R;                      /*set SCLK high to initialize data collection*/

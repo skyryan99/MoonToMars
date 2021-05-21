@@ -25,12 +25,12 @@
 #define DOWN 1
 #define UP 2
 #define CAL_WEIGHT 8
-#define BIAS 25.4 //lbs
+#define BIAS 20.4 //lbs
 #define GAIN 146.2
 
 void initLoadCells();
 unsigned long readCount1();
 unsigned long readCount2();
-void readLoadCells(uint32_t threshhold, uint8_t run);
+float readLoadCells();
 
 #endif /* LOADCELLDATACOLLECTION_H_ */

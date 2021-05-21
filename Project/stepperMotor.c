@@ -61,5 +61,5 @@ void TA1_0_IRQHandler()
         time -= 1;//countdown
     }
 
-    TIMER_A0->CCR[0] = PERIOD;
+    TIMER_A0->CCR[0] = PERIOD;//added erroneously, not sure what it does
 }

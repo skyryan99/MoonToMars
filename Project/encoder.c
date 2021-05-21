@@ -10,7 +10,7 @@
 #include "encoder.h"
 #include "msp.h"
 
-static volatile int32_t valDrill;//motor encoder value
+static volatile int32_t valDrill = 0;//motor encoder value
 static volatile enum DIR dirDrill;//motor direction
 static volatile int32_t valAug;//motor encoder value
 static volatile enum DIR dirAug;//motor direction
@@ -69,6 +69,7 @@ enum DIR getDirDrill(){
 /*gets the current value of the motor
 */
 int32_t getValDrill(){
+    //printf("Enc: %d\n", valDrill);
     return valDrill;
 }
 
