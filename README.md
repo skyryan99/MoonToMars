@@ -27,8 +27,13 @@ Microcontroller Pins in use:
 - Pin 3.3: Drill Motor Encoder, Channel B
 - Pin 5.5: Auger Motor Encoder, Channel A
 - Pin 5.7: Auger Motor Encoder, Channel B
-- Pin 5.1: Valve A
-- Pin 5.2: Valve B
+- Pin 5.1: Valve 1
+- Pin 5.2: Valve 2
+- Pin 2.7: Valve 3
+- Pin 6.6: Backward pumping pin
+- Pin 6.7: Forward pumping pin
+- Pin 6.5: Cartridge heater control
+- Pin 4.6: Tube heater control
 
 ![image](https://user-images.githubusercontent.com/77028155/118193241-3a872d00-b3fc-11eb-9db4-af6711f70764.png)
 
