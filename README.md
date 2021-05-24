@@ -15,8 +15,8 @@ Microcontroller Pins in use:
 - Pin 5.0: x-axis motor ENA+
 - Pin 6.1: Load Cell 2 SCK
 - Pin 6.4: Load Cell 1 SCK
-- Pin 1.5: Load Cell 2 DT
-- Pin 4.3: Load Cell 1 DT
+- Pin 4.3: Load Cell 2 DT
+- Pin 1.5: Load Cell 1 DT
 - Pin 4.0: Top Drill Limit Switch
 - ~~Pin 5.4: Bottom Drill Limit Switch~~
 - ~~Pin 4.7: Top Auger Limit Switch~~
