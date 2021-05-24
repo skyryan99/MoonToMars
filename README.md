@@ -5,35 +5,34 @@ This is the place to add files for the Moon to Mars Ice and Prospecting Challeng
 
 Microcontroller Pins in use:
 - Pin 2.5: Auger Motor PWMA
-- Pin 3.0: Drill Motor PWMA
-- Pin 2.4: Auger Motor INA1
-- Pin 2.6: Drill Motor INA1
-- Pin 3.6: Auger Motor INA2
-- Pin 1.7: Drill Motor INA2
-- Pin 1.6: x-axis motor DIR+
+- Pin 1.6: Drill Motor PWMA
+- Pin 3.0: Auger Motor INA1
+- Pin 1.7: Drill Motor INA1
+- Pin 5.7: Auger Motor INA2
+- Pin 5.0: Drill Motor INA2
+- Pin 5.1: Auger Rotation PWMA
+- Pin 3.5: Auger Rotation INA1
+- Pin 3.7: Auger Rotatiom INA2
+- Pin 6.7: x-axis motor DIR+
 - Pin 2.3: x-axis motor PUL+
-- Pin 5.0: x-axis motor ENA+
-- Pin 6.1: Load Cell 2 SCK
-- Pin 6.4: Load Cell 1 SCK
-- Pin 4.3: Load Cell 2 DT
-- Pin 1.5: Load Cell 1 DT
-- Pin 4.0: Top Drill Limit Switch
-- ~~Pin 5.4: Bottom Drill Limit Switch~~
-- ~~Pin 4.7: Top Auger Limit Switch~~
-- ~~Pin 4.5: Bottom Auger Limit Switch~~
-- ~~Pin 4.4: Left Limit Switch~~
-- ~~Pin 4.2: Right Limit Switch~~
-- Pin 3.2: Drill Motor Encoder, Channel A
-- Pin 3.3: Drill Motor Encoder, Channel B
-- Pin 5.5: Auger Motor Encoder, Channel A
-- Pin 5.7: Auger Motor Encoder, Channel B
-- Pin 5.1: Valve 1
-- Pin 5.2: Valve 2
-- Pin 2.7: Valve 3
-- Pin 6.6: Backward pumping pin
-- Pin 6.7: Forward pumping pin
-- Pin 6.5: Cartridge heater control
-- Pin 4.6: Tube heater control
+- Pin 6.6: x-axis motor ENA+
+- Pin 2.6: Red Load Cell CLK
+- Pin 2.7: Red Load Cell DATA
+- Pin 2.4: Green Load Cell SCK
+- Pin 5.6: Green Load Cell DT
+- Pin : Limit Switches
+- Pin 4.4: Drill Motor Encoder, Channel A
+- Pin 4.2: Drill Motor Encoder, Channel B
+- Pin 4.0: Auger Motor Encoder, Channel A
+- Pin 6.1: Auger Motor Encoder, Channel B
+- Pin 5.5: Valve 1
+- Pin 5.4: Valve 2
+- Pin 5.7: Valve 3
+- Pin ?: Backward Pumping pin
+- Pin 4.5?: Forward Pumping pin
+- Pin 3.6: Cartridge Heater control
+- Pin : Tube Heater control
+- Pin 5.2: Drill Power Relay
 
 ![image](https://user-images.githubusercontent.com/77028155/118193241-3a872d00-b3fc-11eb-9db4-af6711f70764.png)
 
