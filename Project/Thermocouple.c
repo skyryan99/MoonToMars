@@ -21,8 +21,8 @@
  */
 
 
-int16_t MAX31855ReadTemperature(void);
-void delayMs(int n);
+//int16_t MAX31855ReadTemperature(void);
+//void delayMs(int n);
 
 void initThermocouple()
 {
