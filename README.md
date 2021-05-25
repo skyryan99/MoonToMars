@@ -20,11 +20,12 @@ Microcontroller Pins in use:
 - Pin 2.7: Red Load Cell DATA
 - Pin 2.4: Green Load Cell SCK
 - Pin 5.6: Green Load Cell DT
-- Pin : Limit Switches
 - Pin 4.4: Drill Motor Encoder, Channel A
 - Pin 4.2: Drill Motor Encoder, Channel B
 - Pin 4.0: Auger Motor Encoder, Channel A
 - Pin 6.1: Auger Motor Encoder, Channel B
+- Pin : Limit Switches
+- Pin : Servo Motor Control
 - Pin 5.5: Valve 1
 - Pin 5.4: Valve 2
 - Pin 5.7: Valve 3
