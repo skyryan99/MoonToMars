@@ -8,6 +8,7 @@
 #include "stepperMotor.h"
 #include "augerRot.h"
 #include "servoMotor.h"
+#include "Thermocouple.h"
 
 /**
  * main.c
@@ -41,6 +42,7 @@ void initState(void)
     initLimitSwitches();
     initAugerRotMotor();
     initServoMotor();
+    initThermocouple();
 }
 
 void emergencyState(void)
