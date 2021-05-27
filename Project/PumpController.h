@@ -4,12 +4,9 @@
  *  Created on: April 27, 2021
  *      Author: Jacob Everest
  */
-
 #ifndef PUMPCONTROLLER_H_
 #define PUMPCONTROLLER_H_
 
-#define PUMP_PWM_PIN P4
-#define PUMP_PWM_BIT BIT6
 #define PUMP1_PIN P4
 #define PUMP1_BIT BIT3   //Connect to IN1
 #define PUMP2_PIN P4

@@ -1,7 +1,6 @@
 #include "msp.h"
 #include <stdint.h>
-#include "motorDriver.h"
-#include "delay.h"
+#include "motorDrive.h"
 #include "ValveController.h"
 /**
  * main.c
@@ -36,4 +35,20 @@ void Valve2Close(void)
     VALVE2_PIN->SEL0 &= ~(VALVE2_BIT);
     VALVE2_PIN->DIR |= VALVE2_BIT;
     VALVE2_PIN->OUT &= ~(VALVE2_BIT); //Valve 2 controller input low
+}
+
+void Valve3Open(void)
+{
+    VALVE3_PIN->SEL1 &= ~(VALVE3_BIT);                    /* Use GPIO */
+    VALVE3_PIN->SEL0 &= ~(VALVE3_BIT);
+    VALVE3_PIN->DIR |= VALVE3_BIT;
+    VALVE3_PIN->OUT |= VALVE3_BIT; //Valve 2 controller input high
+}
+
+void Valve3Close(void)
+{
+    VALVE3_PIN->SEL1 &= ~(VALVE3_BIT);                    /* Use GPIO */
+    VALVE3_PIN->SEL0 &= ~(VALVE3_BIT);
+    VALVE3_PIN->DIR |= VALVE3_BIT;
+    VALVE3_PIN->OUT &= ~(VALVE3_BIT); //Valve 2 controller input low
 }

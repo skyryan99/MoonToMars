@@ -1,6 +1,10 @@
 #include "msp.h"
+#include <stdint.h>
 #include "HeaterController.h"
 
+/**
+ * main.c
+ */
 void Heater1Off(void)
 {
     HEATER1_PIN->SEL1 &= ~(HEATER1_BIT);                    /* Use GPIO */
