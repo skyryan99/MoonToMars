@@ -41,7 +41,7 @@ void initLimitSwitches() {
     //RIGHT_PIN->SEL1 &= ~RIGHT_BIT;
     //RIGHT_PIN->DIR  &= ~RIGHT_BIT;
 
-    NVIC_EnableIRQ(PORT4_IRQn);
+    NVIC_EnableIRQ(PORT6_IRQn);
 
     TOP_DRILL_PIN->IE |= TOP_DRILL_BIT;
     //BOT_DRILL_PIN->IE |= BOT_DRILL_BIT;
@@ -70,7 +70,8 @@ void resetError() {
     error = 0;
 }
 
-void PORT4_IRQHandler() {//one of the limit switches hit
+void PORT6_IRQHandler() {//one of the limit switches hit
+    //printf("Limit Switch interrupt\n");
     TOP_DRILL_PIN->IFG &= ~TOP_DRILL_BIT;
     //BOT_DRILL_PIN->IFG &= ~BOT_DRILL_BIT;
     //TOP_AUG_PIN->IFG &= ~TOP_AUG_BIT;

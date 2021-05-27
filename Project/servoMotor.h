@@ -8,12 +8,11 @@
 #ifndef SERVOMOTOR_H_
 #define SERVOMOTOR_H_
 
-#define SIG_PIN P4
-#define SIG_BIT BIT2
+#define SIG_PIN P10
+#define SIG_BIT BIT5
 
 void initServoMotor();
-void changeDrillDir(uint8_t dir);
-void initInterruptA2();
-void TA2_0_IRQHandler();
+void reverseServo(uint32_t clock_freq);
+void forwardServo(uint32_t clock_freq);
 
 #endif /* SERVOMOTOR_H_ */

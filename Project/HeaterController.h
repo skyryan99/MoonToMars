@@ -1,16 +1,17 @@
 /*
- * PumpController.h
+ * HeaterController.h
  *
  *  Created on: April 27, 2021
  *      Author: Jacob Everest
  */
+
 #ifndef HEATERCONTROLLER_H_
 #define HEATERCONTROLLER_H_
 
-#define HEATER1_PIN P6
-#define HEATER1_BIT BIT5   //Connect to IN1
-#define HEATER2_PIN P4
-#define HEATER2_BIT BIT6   //Connect to IN2
+#define HEATER1_PIN P4
+#define HEATER1_BIT BIT7   //Cartridge Heater
+#define HEATER2_PIN P9
+#define HEATER2_BIT BIT1   //Tube heater
 
 void Heater1On(void);
 void Heater1Off(void);

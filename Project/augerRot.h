@@ -10,11 +10,16 @@
 
 #include "msp.h"
 
-#define AUG_ROT_PIN P4
-#define AUG_ROT BIT6
+#define PWM_PIN P4
+#define AUG_PWM BIT2
+#define CW_PIN P4
+#define AUG_CW BIT0
+#define CCW_PIN P6
+#define AUG_CCW BIT1
 
 void initAugerRotMotor();
-void augerRotMotorOn();
-void augerRotMotorOff();
+void setAugerRotSpeed(int32_t pow);
+void initInterruptA3(uint32_t startVal);
+void TA3_0_IRQHandler();
 
 #endif /* AUGERROT_H_ */

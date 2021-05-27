@@ -7,15 +7,19 @@
 #include "msp.h"
 #include "motorDriver.h"
 
-#define PERIOD 400
-#define CLOCKWISE 1
-#define COUNTER 0
-#define DRILL 1
-#define AUGER 0
+typedef enum {
+    COUNTER, CLOCKWISE
+}DIR;
 
-static uint8_t motorno;//differentiate between drill and auger
+typedef enum {
+    DRILL, AUGER
+}MOTORNO;
+
+#define PERIOD 400
+
+static MOTORNO motorno;//differentiate between drill and auger
 static uint16_t time;//To control time of low signal and direction of signal
-static uint8_t dir;//direction of motion for drill or auger
+static DIR dir;//direction of motion for drill or auger
 
 
 /*Initializes the motor control output to outputs*/
@@ -31,32 +35,43 @@ void initZMotorDrives()
     M2_PWM_PIN->DIR |= M2_PWM;
     M2_PWM_PIN->OUT |= M2_PWM;
 
+    /*CW and CCW direction pins set for output*/
     M1_CW_PIN->SEL0 &= ~M1_CW;
     M1_CW_PIN->SEL1 &= ~M1_CW;
-
     M2_CW_PIN->SEL0 &= ~M2_CW;
     M2_CW_PIN->SEL1 &= ~M2_CW;
-
     M1_CCW_PIN->SEL0 &= ~M1_CCW;
     M1_CCW_PIN->SEL1 &= ~M1_CCW;
-
     M2_CCW_PIN->SEL0 &= ~M2_CCW;
     M2_CCW_PIN->SEL1 &= ~M2_CCW;
-
     M1_CW_PIN->DIR |= M1_CW;
     M1_CCW_PIN->DIR |= M1_CCW;
-
     M2_CW_PIN->DIR |= M2_CW;
     M2_CCW_PIN->DIR |= M2_CCW;
 
     M1_CW_PIN->OUT &= ~M1_CW;     //turn off motor
     M1_CCW_PIN->OUT &= ~M1_CCW;
-
     M2_CW_PIN->OUT &= ~M2_CW;     //turn off motor
     M2_CCW_PIN->OUT &= ~M2_CCW;
 
+    /*For spinning the drill*/
+    DRILL_POW_PIN->SEL0 &= ~DRILL_POW_BIT;
+    DRILL_POW_PIN->SEL1 &= ~DRILL_POW_BIT;
+    DRILL_POW_PIN->DIR |= DRILL_POW_BIT;
+    DRILL_POW_PIN->OUT &= ~DRILL_POW_BIT; //start off
+
     initInterruptA0(PERIOD);     //init Timer A for PWM
     time = PERIOD;
+}
+
+void drillOn()
+{
+    DRILL_POW_PIN->OUT |= DRILL_POW_BIT;
+}
+
+void drillOff()
+{
+    DRILL_POW_PIN->OUT &= ~DRILL_POW_BIT;
 }
 
 void setDrillSpeed(int32_t pow)
@@ -125,6 +140,7 @@ void TA0_0_IRQHandler()
 {
     /*Clear flag*/
     TIMER_A0->CCTL[0] &= ~TIMER_A_CCTLN_CCIFG;
+    //printf("Z-axis interrupt\n");
 
     /*Consider clockwise-direction*/
     if (dir == CLOCKWISE) {
@@ -149,17 +165,22 @@ void TA0_0_IRQHandler()
         }
 
         /*Otherwise set power accordingly*/
-        if (M1_CW_PIN->OUT & M1_CW) {
-            TIMER_A0->CCR[0] = PERIOD - time;
-        }
-        else {
-            TIMER_A0->CCR[0] = time;
-        }
-
         if (motorno == DRILL) {//operate drill
+            if (M1_CW_PIN->OUT & M1_CW) {
+                TIMER_A0->CCR[0] = PERIOD - time;
+            }
+            else {
+                TIMER_A0->CCR[0] = time;
+            }
             M1_CW_PIN->OUT ^= M1_CW;
         }
         else {//operate auger
+            if (M2_CW_PIN->OUT & M2_CW) {
+                TIMER_A0->CCR[0] = PERIOD - time;
+            }
+            else {
+                TIMER_A0->CCR[0] = time;
+            }
             M2_CW_PIN->OUT ^= M2_CW;
         }
     }
@@ -187,17 +208,22 @@ void TA0_0_IRQHandler()
         }
 
         /*Otherwise set power accordingly*/
-        if (M1_CCW_PIN->OUT & M1_CCW) {
-            TIMER_A0->CCR[0] = PERIOD - time;
-        }
-        else {
-            TIMER_A0->CCR[0] = time;
-        }
-
         if (motorno == DRILL) {//operate drill
+            if (M1_CCW_PIN->OUT & M1_CCW) {
+                TIMER_A0->CCR[0] = PERIOD - time;
+            }
+            else {
+                TIMER_A0->CCR[0] = time;
+            }
             M1_CCW_PIN->OUT ^= M1_CCW;
         }
         else {//operate auger
+            if (M2_CCW_PIN->OUT & M2_CCW) {
+                TIMER_A0->CCR[0] = PERIOD - time;
+            }
+            else {
+                TIMER_A0->CCR[0] = time;
+            }
             M2_CCW_PIN->OUT ^= M2_CCW;
         }
     }

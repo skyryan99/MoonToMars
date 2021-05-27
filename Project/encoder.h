@@ -10,14 +10,15 @@
 #include "msp.h"
 
 #define DRILL_A_PIN P3
-#define DRILL_A_BIT BIT2
+#define DRILL_A_BIT BIT7
 #define DRILL_B_PIN P3
-#define DRILL_B_BIT BIT3
+#define DRILL_B_BIT BIT5
 
-#define AUG_A_PIN P5
-#define AUG_A_BIT BIT5
-#define AUG_B_PIN P5
-#define AUG_B_BIT BIT7
+#define AUG_A_PIN P4
+#define AUG_A_BIT BIT4
+#define AUG_B_PIN P4
+#define AUG_B_BIT BIT2
+
 enum DIR{CLOCKWISE,NOUPDATE,COUNTERCLOCKWISE};
 
 void initZMotorEncoders();

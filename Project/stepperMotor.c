@@ -26,7 +26,7 @@ void initStepperMotor()
     initInterruptA1();
 }
 
-//runtime is in milliseconds(??)
+//runtime is in milliseconds. irq is every 1/8ms
 void MoveLeft(uint32_t runtime)
 {
     DIR_PIN->OUT |= DIR_BIT;
@@ -37,6 +37,11 @@ void MoveRight(uint32_t runtime)
 {
     DIR_PIN->OUT &= ~DIR_BIT;
     time = (3000 * runtime) / PERIOD;
+}
+
+void killStepperMotor()
+{
+    time = 0;
 }
 
 void initInterruptA1()
@@ -55,11 +60,12 @@ void TA1_0_IRQHandler()
 {
     /*Clear flag*/
     TIMER_A1->CCTL[0] &= ~TIMER_A_CCTLN_CCIFG;
+    //printf("Stepper interrupt\n");
 
     if (time != 0) {//if runtime isn't complete
         PUL_PIN->OUT ^= PUL_BIT;//reverse polarity
         time -= 1;//countdown
     }
 
-    TIMER_A0->CCR[0] = PERIOD;//added erroneously, not sure what it does
+    TIMER_A1->CCR[0] = PERIOD;//added erroneously, not sure what it does
 }

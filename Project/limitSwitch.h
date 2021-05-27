@@ -9,8 +9,8 @@
 #define LIMITSWITCH_H_
 #include "msp.h"
 
-#define TOP_DRILL_PIN P4
-#define TOP_DRILL_BIT BIT0
+#define TOP_DRILL_PIN P6
+#define TOP_DRILL_BIT BIT2
 
 //#define BOT_DRILL_PIN P5
 //#define BOT_DRILL_BIT BIT4
