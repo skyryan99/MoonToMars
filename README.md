@@ -3,7 +3,9 @@ Cal Poly 2020/21 ME 428-429-430 Senior Project
 
 This is the place to add files for the Moon to Mars Ice and Prospecting Challenge
 
+
 X - Not Plugged in
+
 Microcontroller Pins in use: (Updated 5/27 4:42am)
 - Pin 2.4:  Drill Z Motor PWMA
 - Pin 2.6:  Drill Z Motor INA1
