@@ -6,7 +6,7 @@ This is the place to add files for the Moon to Mars Ice and Prospecting Challeng
 
 X - Not Plugged in
 
-Microcontroller Pins in use: (Updated 5/27 4:42am)
+Microcontroller Pins in use: (Updated 5/27 5:18am)
 - Pin 2.4:  Drill Z Motor PWMA
 - Pin 2.6:  Drill Z Motor INA1
 - Pin 2.7:  Drill Z Motor INA2
@@ -39,7 +39,7 @@ Microcontroller Pins in use: (Updated 5/27 4:42am)
 - Pin 9.3:  Valve 2 (Top)
 - Pin 8.3:  Valve 3 (Bottom)
 - Pin 9.1:  Tube Heater Control
-- Pin 8.4:  Limit Switches                    (X)
+- Pin 6.2:  Limit Switches                    (X)
 - Pin 10.5: Servo Motor Control               (X)
 
 TO-DO:
