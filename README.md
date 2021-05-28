@@ -6,14 +6,14 @@ This is the place to add files for the Moon to Mars Ice and Prospecting Challeng
 
 X - Not Plugged in
 
-Microcontroller Pins in use: (Updated 5/27 4:15pm)
+Microcontroller Pins in use: (Updated 5/27 10:38pm)
 - Pin 2.4:  Drill Z Motor PWMA
 - Pin 2.6:  Drill Z Motor INA1
 - Pin 2.7:  Drill Z Motor INA2
 - Pin 5.5:  Drill Z Motor Encoder A
 - Pin 5.4:  Drill Z Motor Encoder B
 - Pin 2.5:  Drill Power Relay
-- Pin 2.3:  Auger Z Motor PWMA
+- Pin 6.0:  Auger Z Motor PWMA
 - Pin 6.7:  Auger Z Motor INA1
 - Pin 6.6:  Auger Z Motor INA2
 - Pin 4.5:  Auger Z Motor Encoder A           (X)
