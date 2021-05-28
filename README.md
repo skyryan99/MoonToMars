@@ -10,8 +10,8 @@ Microcontroller Pins in use: (Updated 5/27 4:15pm)
 - Pin 2.4:  Drill Z Motor PWMA
 - Pin 2.6:  Drill Z Motor INA1
 - Pin 2.7:  Drill Z Motor INA2
-- Pin 3.7:  Drill Z Motor Encoder A
-- Pin 3.5:  Drill Z Motor Encoder B
+- Pin 5.5:  Drill Z Motor Encoder A
+- Pin 5.4:  Drill Z Motor Encoder B
 - Pin 2.5:  Drill Power Relay
 - Pin 2.3:  Auger Z Motor PWMA
 - Pin 6.7:  Auger Z Motor INA1
@@ -25,10 +25,10 @@ Microcontroller Pins in use: (Updated 5/27 4:15pm)
 - Pin 9.1:  Stepper Motor PUL+
 - Pin 8.7:  Stepper Motor DIR+
 - Pin 8.6:  Stepper Motor ENA+
-- Pin 8.7:  Red Load Cell Clock
-- Pin 9.0:  Red Load Cell Data
-- Pin 8.6:  Green Load Cell Clock
-- Pin 8.5:  Green Load Cell Data
+- Pin 3.3:  Red Load Cell Clock
+- Pin 3.2:  Red Load Cell Data
+- Pin 6.4:  Green Load Cell Clock
+- Pin 6.5:  Green Load Cell Data
 - Pin 4.6:  Pump Controller PWMA
 - Pin 4.3:  Pump Controller INA1
 - Pin 4.1:  Pump Controller INA2
