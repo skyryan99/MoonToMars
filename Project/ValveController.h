@@ -8,11 +8,11 @@
 #ifndef VALVECONTROLLER_H_
 #define VALVECONTROLLER_H_
 
-#define VALVE1_PIN P9
+#define VALVE1_PIN P6
 #define VALVE1_BIT BIT3
-#define VALVE2_PIN P8
+#define VALVE2_PIN P9
 #define VALVE2_BIT BIT3
-#define VALVE3_PIN P6
+#define VALVE3_PIN P8
 #define VALVE3_BIT BIT3
 
 void Valve1Open(void);

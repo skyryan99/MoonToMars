@@ -23,9 +23,9 @@ void main(void)
 	//Initital code to be run when the probe is in the ground
 	Heater1On();       //Start by turning the heater on to melt the ice
     PumpForward();     //Start pumping, can run dry so it isn't a problem
-    Valve1Close();     //Close the outlet valve to begin with, just want it to circulate water in the water jet
-    Valve2Open();      //Open the water jet valve
-    Valve3Close();     //Close the valve that we use to dump out the system
+    Valve2Close();     //Close the outlet valve to begin with, just want it to circulate water in the water jet
+    Valve3Open();      //Open the water jet valve
+    Valve1Close();     //Close the valve that we use to dump out the system
     HPCount = 0;       //Reset the heater probe counter
     Done = 0;          //Start by making sure the system doesn't thing we're done
     AmountOfCycles = 4;//Change this to however many cycles we want to use
@@ -57,15 +57,15 @@ void main(void)
 
 	    if (HPCount < 3 && CycleCount < AmountOfCycles && Done == 0) //State 2 Water jet function
 	    {
-	        Valve1Close();
-	        Valve2Open();
+	        Valve2Close();
+	        Valve3Open();
 	        Heater2On();
 	    }
 	    else if (HPCount == 3 && CycleCount < AmountOfCycles && Done == 0) //recirc state. Base coming here on doing so a certain number of times
 	        //when implemented in actual code. This should be done for a few minutes and then skipped to give time to sucking out water.
 	    {
-	        Valve1Close();
-	        Valve2Open();
+	        Valve2Close();
+	        Valve3Open();
 	        Heater2Off();
 	        PumpBackward();
             for (lion = 0; lion < 100000; lion++)
@@ -75,20 +75,20 @@ void main(void)
         else if (HPCount == 4 && CycleCount < AmountOfCycles && Done == 0) //State 3 Extract Water
         {
             PumpForward();
-            Valve1Open();
-            Valve2Close();
+            Valve2Open();
+            Valve3Close();
             Heater2Off();
         }
 	    else if (HPCount > 4 && HPCount < 7 && CycleCount < AmountOfCycles && Done == 0) //State 4 Water jet function
 	    {
-	        Valve1Close();
-            Valve2Open();
+	        Valve2Close();
+            Valve3Open();
             Heater2On();
 	    }
 	    else if (HPCount == 7 && CycleCount < AmountOfCycles && Done == 0) //Recirc state
 	    {
-            Valve1Close();
-            Valve2Open();
+            Valve2Close();
+            Valve3Open();
             Heater2Off();
             PumpBackward();
             for (lion = 0; lion < 100000; lion++)
@@ -98,16 +98,16 @@ void main(void)
         else if (HPCount == 8 && CycleCount < AmountOfCycles && Done == 0) //State 5 Extract Water
         {
             PumpForward();
-            Valve1Open();
-            Valve2Close();
+            Valve2Open();
+            Valve3Close();
             Heater2Off();
             HPCount = 0;
             CycleCount += 1;
         }
 	    else if (HPCount == 1 && CycleCount >= AmountOfCycles && Done == 0) //Recirc state
 	    {
-            Valve1Close();
-            Valve2Open();
+            Valve2Close();
+            Valve3Open();
             Heater2Off();
             PumpBackward();
             for (lion = 0; lion < 100000; lion++)
@@ -117,16 +117,16 @@ void main(void)
         else if (HPCount < 4 && CycleCount >= AmountOfCycles && Done == 0) //State 6 Final suction state, Can adjust HPCount to make it longer or shorter
         {
             PumpForward();
-            Valve1Open();
-            Valve2Close();
+            Valve2Open();
+            Valve3Close();
             Heater2Off();
         }
 	    else if (HPCount >= 4 && CycleCount >= AmountOfCycles && Done == 0) //State 7 clear out system
 	    {
 	        PumpBackward();
-	        Valve1Close();
 	        Valve2Close();
-	        Valve3Open();
+	        Valve3Close();
+	        Valve1Open();
 	        Heater1Off();
 	        Done = 1;
 	    }
