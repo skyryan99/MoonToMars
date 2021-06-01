@@ -11,7 +11,7 @@
 #define SIG_PIN P10
 #define SIG_BIT BIT5
 
-void initServoMotor();
+void initServoMotor(uint32_t clock_freq);
 void reverseServo(uint32_t clock_freq);
 void forwardServo(uint32_t clock_freq);
 

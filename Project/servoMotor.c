@@ -9,12 +9,13 @@
 #include "servoMotor.h"
 #include "delay.h"
 
-void initServoMotor()//can rework to run on interrupts, but probs not necessary. nothing should run during this time?
+void initServoMotor(uint32_t clock_freq)//can rework to run on interrupts, but probs not necessary. nothing should run during this time?
 {
     SIG_PIN->SEL0 &= ~SIG_BIT;
     SIG_PIN->SEL1 &= ~SIG_BIT;
     SIG_PIN->DIR  |= SIG_BIT;
     SIG_PIN->OUT  &= ~SIG_BIT;
+    forwardServo(clock_freq);
 }
 
 void forwardServo(uint32_t clock_freq)//blocks for 20ms
