@@ -8,14 +8,14 @@
  * resources: https://users.wpi.edu/~sullivan/ME3901/Laboratories/03-Temperature_Labs/Temperature_an043.pdf
  *
  *
- * SETUP:
+ * SETUP: Green (-) and Blue(+) 
  * Thermocouple requires MAX31855 digital converter:
  *   - uses 3.3 VDC
  *   - CS - chip-select                               [any GPIO pin]
  *   - DO - MISO "master in, slave out' - data signal [refer to user manual to determine which pin to use]
  *   - CLK - clock                                    [refer to user manual to determine which pin to use]
  * Output is in degree C
- *
+ * 
  * Created on: May 21, 2021
  *      Author: Rebecca Rodriguez
  */
