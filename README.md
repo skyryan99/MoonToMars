@@ -37,7 +37,7 @@ Microcontroller Pins in use: (Updated 5/27 10:38pm)
 - Pin 3.6:  Thermocouple Chip Select          (X)
 - Pin 6.3:  Valve 1 (Prefilter) <-- Tyler's convention, in code this is Valve 3
 - Pin 9.3:  Valve 2 (Top) <-- Tyler's convention, in code this is Valve 1
-- Pin :  Valve 3 (Bottom) <-- Tyler's convention, in code this is Valve 2     (X)
+- Pin 8.3:  Valve 3 (Bottom) <-- Tyler's convention, in code this is Valve 2
 - Pin :  Tube Heater Control                  (X)
 - Pin 6.2:  Limit Switches                    (X)
 - Pin 10.5: Servo Motor Control               (X)
