@@ -3,6 +3,10 @@ Cal Poly 2020/21 ME 428-429-430 Senior Project
 
 This is the place to add files for the Moon to Mars Ice and Prospecting Challenge
 
+Project: A place for all active files in the project build. Updated and maintained as changes are made.
+
+TestingStuff: A place for files that have not been added the project build or have since been removed. Any code written to perform tests also goes here.
+
 
 X - Not Plugged in
 
