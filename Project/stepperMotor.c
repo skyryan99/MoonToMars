@@ -4,9 +4,11 @@
 #include "delay.h"
 #include "stepperMotor.h"
 
-#define PERIOD 2000
-//decreasing this speeds up rotation - to a point. Do not reduce below 1000 or cause fire alarm. Do not exceed 3000 or cause earthquakes.
+#define PERIOD 1600
+//decreasing this speeds up rotation - to a point. Do not reduce too low or cause fire alarm. Do not increase too high or cause earthquakes.
 //Timing numbers are (N/3000)*ms.
+//PERIOD is dependent on size of pulley. Decrease or increase with pulley size.
+//1800 gives 0.25 inches / sec
 
 static uint32_t time;//time for motor to run
 

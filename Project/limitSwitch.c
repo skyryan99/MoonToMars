@@ -8,7 +8,8 @@
 #include "limitSwitch.h"
 #include "motorDriver.h"
 
-static uint8_t error;//if we hit the limit switch go into error state
+static uint8_t error = 0;//if we hit the limit switch go into error state
+static volatile float pinVal = 0;
 //so we can't drive motor past limit switches
 
 /*Initializes the limit switches as input and enable interrupt for both of them.
@@ -17,47 +18,29 @@ static uint8_t error;//if we hit the limit switch go into error state
 */
 
 void initLimitSwitches() {
-    TOP_DRILL_PIN->SEL0 &= ~TOP_DRILL_BIT;
-    TOP_DRILL_PIN->SEL1 &= ~TOP_DRILL_BIT;
-    TOP_DRILL_PIN->DIR  &= ~TOP_DRILL_BIT;
+    LIM_PIN->SEL0 |= LIM_BIT;
+    LIM_PIN->SEL1 |= LIM_BIT;
 
-    //BOT_DRILL_PIN->SEL0 &= ~BOT_DRILL_BIT;
-    //BOT_DRILL_PIN->SEL1 &= ~BOT_DRILL_BIT;
-    //BOT_DRILL_PIN->DIR  &= ~BOT_DRILL_BIT;
+    ADC14->CTL0 = ADC14_CTL0_SSEL__SMCLK | ADC14_CTL0_ON | ADC14_CTL0_SHP | ADC14_CTL0_SHT0_3;
+    ADC14->CTL1 = ADC14_CTL1_RES_3;// sets DF to 0!
+    ADC14->MCTL[0] = ADC14_MCTLN_VRSEL_0 |  //Sett to 1110b = V(R+) = VeREF+, V(R-) = VeREF-
+                                                //sset ADC14VRSEl = = V(R+) = AVCC, V(R-) = AVSS
+                        ADC14_MCTLN_INCH_15; //AD15 selected (P6.0)
+        //| ADC14_CTL0_ENC enable
 
-    //TOP_AUG_PIN->SEL0 &= ~TOP_AUG_BIT;
-    //TOP_AUG_PIN->SEL1 &= ~TOP_AUG_BIT;
-    //TOP_AUG_PIN->DIR  &= ~TOP_AUG_BIT;
+    ADC14->CLRIFGR0 |= ADC14_CLRIFGR0_CLRIFG0;
+    ADC14->IER0 = ADC14_IER0_IE0;    //eanble interupt on FL bit
+    __enable_irq();
+    NVIC_EnableIRQ(ADC14_IRQn);
 
-    //BOT_AUG_PIN->SEL0 &= ~BOT_AUG_BIT;
-    //BOT_AUG_PIN->SEL1 &= ~BOT_AUG_BIT;
-    //BOT_AUG_PIN->DIR  &= ~BOT_AUG_BIT;
-
-    //LEFT_PIN->SEL0 &= ~LEFT_BIT;
-    //LEFT_PIN->SEL1 &= ~LEFT_BIT;
-    //LEFT_PIN->DIR  &= ~LEFT_BIT;
-
-    //RIGHT_PIN->SEL0 &= ~RIGHT_BIT;
-    //RIGHT_PIN->SEL1 &= ~RIGHT_BIT;
-    //RIGHT_PIN->DIR  &= ~RIGHT_BIT;
-
-    NVIC_EnableIRQ(PORT6_IRQn);
-
-    TOP_DRILL_PIN->IE |= TOP_DRILL_BIT;
-    //BOT_DRILL_PIN->IE |= BOT_DRILL_BIT;
-    //TOP_AUG_PIN->IE |= TOP_AUG_BIT;
-    //BOT_AUG_PIN->IE |= BOT_AUG_BIT;
-    //LEFT_PIN->IE |= LEFT_BIT;
-    //RIGHT_PIN->IE |= RIGHT_BIT;
-
-    TOP_DRILL_PIN->IES |= TOP_DRILL_BIT;//falling edges
-    //BOT_DRILL_PIN->IES |= BOT_DRILL_BIT;
-    //TOP_AUG_PIN->IES |= TOP_AUG_BIT;
-    //BOT_AUG_PIN->IES |= BOT_AUG_BIT;
-    //LEFT_PIN->IES |= LEFT_BIT;
-    //RIGHT_PIN->IES |= RIGHT_BIT;
+    TIMER_A2->CCTL[0] = TIMER_A_CCTLN_CCIE; // TA2CCR0 interrupt enabled
+    TIMER_A2->CCR[0] = 3000;
+    TIMER_A2->CTL = TIMER_A_CTL_SSEL__SMCLK | // SMCLK, up mode
+                TIMER_A_CTL_MC__UP |  TIMER_A_CTL_ID__8;
+    NVIC_EnableIRQ(TA2_0_IRQn);
 
     error = 0; //not in error state yet
+    pinVal = 0;
 }
 
 /*lets the user check if we have entered an error state*/
@@ -70,14 +53,29 @@ void resetError() {
     error = 0;
 }
 
-void PORT6_IRQHandler() {//one of the limit switches hit
-    //printf("Limit Switch interrupt\n");
-    TOP_DRILL_PIN->IFG &= ~TOP_DRILL_BIT;
-    //BOT_DRILL_PIN->IFG &= ~BOT_DRILL_BIT;
-    //TOP_AUG_PIN->IFG &= ~TOP_AUG_BIT;
-    //BOT_AUG_PIN->IFG &= ~BOT_AUG_BIT;
-    //LEFT_PIN->IFG &= ~LEFT_BIT;
-    //RIGHT_PIN->IFG &= ~RIGHT_BIT;
+float getVal() {
+    return pinVal;
+}
 
-    error = 1;
+void TA2_0_IRQHandler() {
+
+    TIMER_A2->CCTL[0] &= ~TIMER_A_CCTLN_CCIFG;
+    TIMER_A2->CCR[0] = 3000;//2 ms
+    readADC();//get new val
+    if (pinVal >= 0.85) {//value can be varied along with coef and frequency of measurements to eliminate noise
+        error = 1;
+    }
+}
+
+void readADC(){
+    ADC14->CTL0 |= ADC14_CTL0_ENC | ADC14_CTL0_SC;//triggers a call to Read ADC value
+}
+
+void ADC14_IRQHandler(){//triggers when a new value of ADC is detected
+    float temp, coef = 0.96;
+
+    ADC14->CLRIFGR0 |= ADC14_CLRIFGR0_CLRIFG0;
+
+    temp = (((ADC14->MEM[0]) & 0x3FFF)*33)/ADCMAX;
+    pinVal = coef * pinVal + temp * (1 - coef);//low pass filter
 }

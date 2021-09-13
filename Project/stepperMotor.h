@@ -8,12 +8,12 @@
 #ifndef STEPPERMOTOR_H_
 #define STEPPERMOTOR_H_
 
-#define DIR_PIN P3
-#define DIR_BIT BIT2
-#define PUL_PIN P3
-#define PUL_BIT BIT3
-#define ENA_PIN P6
-#define ENA_BIT BIT0
+#define DIR_PIN P8
+#define DIR_BIT BIT7
+#define PUL_PIN P9
+#define PUL_BIT BIT1
+#define ENA_PIN P8
+#define ENA_BIT BIT6
 
 void initStepperMotor();
 void MoveLeft(uint32_t runtime);

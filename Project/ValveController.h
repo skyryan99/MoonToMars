@@ -15,6 +15,9 @@
 #define VALVE3_PIN P8
 #define VALVE3_BIT BIT3
 
+#define DELAY 1500//how many ms to wait for valve to actuate
+
+void initValves();
 void Valve1Open(void);
 void Valve1Close(void);
 void Valve2Open(void);

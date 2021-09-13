@@ -9,76 +9,103 @@
  * 3. Transfer bits
  */
 
-static float last;//keep track of last data point to filter random jumps
-static uint8_t repeat;//keep tracks of number of data points adjusted to ensure not stuck in permanent loop
+static float WOB;//keep track of last data point to filter random jumps
+static unsigned long OFFSET_L;//offset for Left/Green Load Cell
+//static unsigned long OFFSET_R;//offset for Right/Red Load Cell
 
 void initLoadCells()
 {
     /*Load Cell 1*/
-    /* Input - DT - on P1.5*/
+    /* Input - DT*/
     DATA_PIN_L->SEL1 &= ~(DATA_BIT_L);                   /* Use GPIO */
     DATA_PIN_L->SEL0 &= ~(DATA_BIT_L);
     DATA_PIN_L->DIR &= ~(DATA_BIT_L);                    /*0 - input*/
-    DATA_PIN_L->REN |= DATA_BIT_L;                       /*enable pull resistor*/
-    DATA_PIN_L->OUT |= DATA_BIT_L;                       /*select pull UP resistor*/
+    //DATA_PIN_L->REN |= DATA_BIT_L;                       /*enable pull resistor*/
+    //DATA_PIN_L->OUT |= DATA_BIT_L;                       /*select pull UP resistor*/
 
-    /* Output - SCK - on P6.1*/
+    /* Output - SCK*/
     CLK_PIN_L->SEL1 &= ~(CLK_BIT_L);                     /* Use GPIO */
     CLK_PIN_L->SEL0 &= ~(CLK_BIT_L);
     CLK_PIN_L->DIR |= CLK_BIT_L;                         /*1 - output*/
 
-    DATA_PIN_L->IN | DATA_BIT_L;                         /*set DT high*/
+    //DATA_PIN_L->OUT |= DATA_BIT_L;                         /*set DT high*/ //THIS IS JUST EVALUATING AN EXPRESSION, NOT SETTING A VALUE. REVISIT LATER.....
     CLK_PIN_L->OUT &= ~(CLK_BIT_L);                      /*set SCK low */
 
     /*Load Cell 2*/
-    /* Input - DT - on P4.3*/
+    /* Input - DT*/
     DATA_PIN_R->SEL1 &= ~(DATA_BIT_R);                    /* Use GPIO */
     DATA_PIN_R->SEL0 &= ~(DATA_BIT_R);
     DATA_PIN_R->DIR &= ~(DATA_BIT_R);                     /*0 - input*/
-    DATA_PIN_R->REN |= DATA_BIT_R;                        /*enable pull resistor*/
-    DATA_PIN_R->OUT |= DATA_BIT_R;                        /*select pull UP resistor*/
+    //DATA_PIN_R->REN |= DATA_BIT_R;                        /*enable pull resistor*/
+    //DATA_PIN_R->OUT |= DATA_BIT_R;                        /*select pull UP resistor*/
 
-    /* Output - SCK - on P6.4*/
+    /* Output - SCK*/
     CLK_PIN_R->SEL1 &= ~(CLK_BIT_R);                      /* Use GPIO */
     CLK_PIN_R->SEL0 &= ~(CLK_BIT_R);
     CLK_PIN_R->DIR |= CLK_BIT_R;                          /*1 - output*/
 
-    DATA_PIN_R->IN | DATA_BIT_R;                          /*set DT high*/
+    //DATA_PIN_R->OUT |= DATA_BIT_R;                          /*set DT high*/ //SAME HERE >.........................
     CLK_PIN_R->OUT &= ~(CLK_BIT_R);                       /*set SCK low */
 
-    last = 4;//magic number. Will check if 3x greater to throw out points. First reading should never exceed 18
-    repeat = 0;
+    initOffsets();
+    WOB = 0;//magic number
+}
+
+void initOffsets() {
+    uint8_t i = 0;
+    float sum = 0, temp;
+
+    //Flush one reading
+    readCount1();
+    readCount2();
+
+    while (i < 20) {
+        temp = readCount1();
+        //printf("%f\n", temp);
+        if (temp < 8100000 && temp > 6900000) {//filter bad data
+            sum += temp;
+            i++;
+        }
+    }
+    sum = sum / 20;//get avg
+    OFFSET_L = sum;
+    /*LOAD CELL NOT WORKING
+    sum = 0;//now do other load cell
+    while (1 < 20) {
+        temp = readCount2();
+        if (temp < 8500000) {
+            sum += temp;
+            i++;
+        }
+    }
+    sum = sum / 20;//get avg
+    OFFSET_R = sum;
+    */
 }
 
 float readLoadCells()
 {
-    unsigned long val1, val2;
-    float WOB = 0, del;
+    float val1, temp, coef = 0.75;
+    //float val2;//LOAD CALL NOT WORKING
 
     /*Collect readings*/
-    val1 = readCount1();
-    val2 = readCount2();
+    val1 = (float)readCount1();//setting this to OFFSET_L makes the reading useless and yield 0, for testing purposes
+    //val2 = (float)readCount2();//setting this to OFFSET_R makes the reading useless and yield 0, for testing purposes
+    //LOAD CELL IS NOT WORKING
 
     /*Calculate WOB*/
-    WOB = (((val1 - OFFSET_L) / (CAL_COUNT_L * CAL_WEIGHT)) + ((val2 - OFFSET_R) / (CAL_COUNT_R * CAL_WEIGHT))) * GAIN + BIAS; // Add both load cell values
-
-    del = abs(WOB - last);
+    //temp = ((val1 - OFFSET_L) + (val2 - OFFSET_R)) / CALFACTOR;//both vals should have approx half the total weight. add for total
+    temp = (val1 - OFFSET_L) / CALFACTOR;
 
     /*Prefilter bad data using last collected point*/
-    if (repeat < 3 && ((del > 15) || (del > (abs(last) + 1) * 3) || (del > (abs(WOB) + 1) * 3))) {//if wob is 15 more or less than last, throw out. FLAT VALUE
-        //Also if it is 3 times greater or lesser, we throw out. A small margin is used to not constantly throw out values floating near 0.
-        //We only repeat this 3 times in a row max, otherwise we could perma-loop
-        repeat++;
-        //printf("%.2f \n", last);
-
-        return last;
+    if (abs(temp) > 2 * (abs(WOB) + 2)) {
+        WOB += 2;
+    }
+    else {
+        WOB = coef * WOB + temp * (1 - coef);//low pass filter
     }
 
-    //reset repeat and last
-    repeat = 0;
-    last = WOB;
-
-    //printf("%.2f \n", WOB);
+    //printf("WOB: %.2f\n", WOB);
 
     return WOB;
 }
@@ -88,11 +115,11 @@ unsigned long readCount1(void)
     unsigned long count = 0;
     uint32_t i;
 
-    //while (DATA_PIN_L->IN & DATA_BIT_L);                    /*stay in this loop if DT high*/
+    while (DATA_PIN_L->IN & DATA_BIT_L);                    /*stay in this loop if DT high*/
 
     for (i = 0; i < 24; i++) {
         CLK_PIN_L->OUT |= CLK_BIT_L;                      /*set SCLK high to initialize data collection*/
-        count <<= 1;
+        count = count << 1;
         CLK_PIN_L->OUT &= ~(CLK_BIT_L);                   /*set SCLK low to toggle clock*/
         if (DATA_PIN_L->IN & DATA_BIT_L)
             count++;
@@ -105,23 +132,24 @@ unsigned long readCount1(void)
     return count;
 }
 
+// LOAD CELL IS NOT WORKING
 unsigned long readCount2(void)
 {
     unsigned long count = 0;
     uint32_t i;
 
-    //while (DATA_PIN_R->IN & DATA_BIT_R);                   /*stay in this loop if DT high*/
+    while (DATA_PIN_R->IN & DATA_BIT_R);                   //stay in this loop if DT high
 
     for (i = 0; i < 24; i++) {
-        CLK_PIN_R->OUT |= CLK_BIT_R;                      /*set SCLK high to initialize data collection*/
-        count <<= 1;
-        CLK_PIN_R->OUT &= ~(CLK_BIT_R);                   /*set SCLK low to toggle clock*/
+        CLK_PIN_R->OUT |= CLK_BIT_R;                      //set SCLK high to initialize data collection
+        count = count << 1;
+        CLK_PIN_R->OUT &= ~(CLK_BIT_R);                   //set SCLK low to toggle clock
         if (DATA_PIN_R->IN & DATA_BIT_R)
             count++;
     }
 
-    CLK_PIN_R->OUT |= CLK_BIT_R;                          /*set SCLK high to toggle clock*/
-    count = count^0x800000;                             /* Read the MSB */
-    CLK_PIN_R->OUT &= ~(CLK_BIT_R);                       /*set SCLK low to toggle clock*/
+    CLK_PIN_R->OUT |= CLK_BIT_R;                          //set SCLK high to toggle clock
+    count = count^0x800000;                             // Read the MSB
+    CLK_PIN_R->OUT &= ~(CLK_BIT_R);                       //set SCLK low to toggle clock
     return count;
 }

@@ -13,4 +13,7 @@
 #define CS_BIT BIT6
 #define CAL_CONST 0.25
 
+void initThermocouple();
+short MAX31855ReadTemperature();
+
 #endif /* THERMOCOUPLE_H_ */

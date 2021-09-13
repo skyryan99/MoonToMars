@@ -12,7 +12,7 @@
 
 static volatile int32_t valDrill = 0;//motor encoder value
 static volatile enum DIR dirDrill;//motor direction
-static volatile int32_t valAug;//motor encoder value
+static volatile int32_t valAug = 0;//motor encoder value
 static volatile enum DIR dirAug;//motor direction
 static volatile uint8_t updateDrill;//if there is a new motor value to display
 static volatile uint8_t updateAug;//if there is a new motor value to display
@@ -33,7 +33,7 @@ void initZMotorEncoders() {
     AUG_B_PIN->SEL1 &= ~AUG_B_BIT;
     AUG_B_PIN->DIR  &= ~AUG_B_BIT;
 
-    NVIC_EnableIRQ(PORT3_IRQn);//need to change if change encoder pins
+    NVIC_EnableIRQ(PORT5_IRQn);//need to change if change encoder pins
     NVIC_EnableIRQ(PORT4_IRQn);//need to change if change encoder pins
 
     DRILL_A_PIN->IFG &= ~DRILL_A_BIT;//start with interrupts cleared
@@ -206,7 +206,7 @@ void augBPin() {
     AUG_B_PIN->IES ^= AUG_B_BIT;//change channel B to toggle a falling edge or a rising edge to trigger at. Do this to catch any change
 }
 
-void PORT3_IRQHandler() {//for DRILL_A_PIN and DRILL_B_PIN
+void PORT5_IRQHandler() {//for DRILL_A_PIN and DRILL_B_PIN
     //printf("Drill enc interrupt\n");
     if (DRILL_A_PIN->IFG & DRILL_A_BIT) {//if the motor encoder channel A changed or channel B changed
         DRILL_A_PIN->IFG &= ~DRILL_A_BIT;
@@ -218,7 +218,7 @@ void PORT3_IRQHandler() {//for DRILL_A_PIN and DRILL_B_PIN
     }
     valDrill += (dirDrill - 1);//Clockwise is 0 and COUNTERCLOCKWISE is 2
     updateDrill = 1;//there is a new value to read from the motor encoder
-    dirDrill = NOUPDATE;
+    //dirDrill = NOUPDATE;
 }
 
 void PORT4_IRQHandler() {//for AUG_A_PIN and AUG_B_PIN
@@ -233,5 +233,5 @@ void PORT4_IRQHandler() {//for AUG_A_PIN and AUG_B_PIN
     }
     valAug += (dirAug - 1);//Clockwise is 0 and COUNTERCLOCKWISE is 2
     updateAug = 1;//there is a new value to read from the motor encoder
-    dirAug = NOUPDATE;
+    //dirAug = NOUPDATE;
 }

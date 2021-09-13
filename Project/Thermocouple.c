@@ -1,6 +1,7 @@
 #include "msp.h"
 #include "Thermocouple.h"
 #include <stdio.h>
+#include "delay.h"
 
 /*
  * main.c
@@ -8,14 +9,14 @@
  * resources: https://users.wpi.edu/~sullivan/ME3901/Laboratories/03-Temperature_Labs/Temperature_an043.pdf
  *
  *
- * SETUP: Green (-) and Blue(+) 
+ * SETUP: Green (-) and Blue(+)
  * Thermocouple requires MAX31855 digital converter:
  *   - uses 3.3 VDC
  *   - CS - chip-select                               [any GPIO pin]
  *   - DO - MISO "master in, slave out' - data signal [refer to user manual to determine which pin to use]
  *   - CLK - clock                                    [refer to user manual to determine which pin to use]
  * Output is in degree C
- * 
+ *
  * Created on: May 21, 2021
  *      Author: Rebecca Rodriguez
  */
@@ -45,39 +46,31 @@ void print_temp_data(void){
 
     while(1){
         temp = MAX31855ReadTemperature();
-        printf("Temp [Â°C]: %d\n\r",temp);
-        //delayMs(237);
+        printf("Temp [°C]: %d\n\r",temp);
+        //delay_ms(237, 24);
     }
 }
 
-int16_t MAX31855ReadTemperature(void)
+short MAX31855ReadTemperature(void)
 {
     uint32_t readresults[4];
     uint8_t count;
-    volatile int16_t thermocouple_temp;
+    volatile short thermocouple_temp;
 
     count = 4;
     while(count != 0)
     {
         count--;
-        P2->OUT &= ~8;                                /*Enable CS*/
+        //P2->OUT &= ~8;                                /*Enable CS*/
         while(!(EUSCI_B0->IFG & EUSCI_B_IFG_TXIFG));  /*wait for transmit buffer empty */
         EUSCI_B0->TXBUF = 0x00;                       /*Transmitting dummy byte to MAX31855*/
         while(!(EUSCI_B0->IFG & EUSCI_B_IFG_RXIFG));  /*wait for transmit done */
         readresults[count] = EUSCI_B0->RXBUF;         /*Receive data*/
     }
 
-    P2->OUT |= 8;                                     /* deassert slave select aka "chip select"*/
+    //P2->OUT |= 8;                                     /* deassert slave select aka "chip select"*/
     thermocouple_temp = (int)((((readresults[3]) << 8) | ((readresults[2]) & 0xFC))>> 2)* CAL_CONST; // Retrieve 2's complement
 
     return thermocouple_temp;
 }
 
-void delayMs(int n)
-{
-    int i,j;
-    for(j = 0; j < n; j++)
-    {
-        for(i = 250; i > 0; i--);       /* Delay 1ms */
-    }
-}

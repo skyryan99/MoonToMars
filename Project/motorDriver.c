@@ -140,7 +140,6 @@ void TA0_0_IRQHandler()
 {
     /*Clear flag*/
     TIMER_A0->CCTL[0] &= ~TIMER_A_CCTLN_CCIFG;
-    //printf("Z-axis interrupt\n");
 
     /*Consider clockwise-direction*/
     if (dir == CLOCKWISE) {
