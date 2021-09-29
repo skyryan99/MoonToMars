@@ -20,8 +20,8 @@ Microcontroller Pins in use: (Updated 5/27 10:38pm)
 - Pin 2.3:  Auger Z Motor PWMA
 - Pin 6.7:  Auger Z Motor INA1
 - Pin 6.6:  Auger Z Motor INA2
-- Pin 4.5:  Auger Z Motor Encoder A           (X)
-- Pin 4.4:  Auger Z Motor Encoder B           (X)
+- Pin 4.5:  Auger Z Motor Encoder A           
+- Pin 4.4:  Auger Z Motor Encoder B           
 - Pin 4.2:  Auger Rot Motor PWMA
 - Pin 4.0:  Auger Rot Motor INA1
 - Pin 6.1:  Auger Rot Motor INA2
@@ -43,7 +43,7 @@ Microcontroller Pins in use: (Updated 5/27 10:38pm)
 - Pin 9.3:  Valve 2 (Top)
 - Pin 8.3:  Valve 3 (Bottom) 
 - Pin :  Tube Heater Control                  (X)
-- Pin 6.0:  Limit Switches                    (X)
+- Pin 6.0:  Limit Switches                    
 - Pin 10.5: Servo Motor Control               (X)
 
 TO-DO:
